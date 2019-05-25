@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="简单排序,算法,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="个人博客" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="共用的方法：1234567891011121314/** * 数组生成：随机生成1~20个100范围内的数的数组 * @return */public static long[] getArrs()&amp;#123;    Random random = new Random();    long[] arrs;    int count = random.nextInt(20) + 1;    arr">
+<meta name="keywords" content="简单排序,算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="简单的排序算法">
+<meta property="og:url" content="https://duia.github.io/2017/02/28/简单的排序算法/index.html">
+<meta property="og:site_name" content="个人博客">
+<meta property="og:description" content="共用的方法：1234567891011121314/** * 数组生成：随机生成1~20个100范围内的数的数组 * @return */public static long[] getArrs()&amp;#123;    Random random = new Random();    long[] arrs;    int count = random.nextInt(20) + 1;    arr">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-05-20T01:00:00.006Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="简单的排序算法">
+<meta name="twitter:description" content="共用的方法：1234567891011121314/** * 数组生成：随机生成1~20个100范围内的数的数组 * @return */public static long[] getArrs()&amp;#123;    Random random = new Random();    long[] arrs;    int count = random.nextInt(20) + 1;    arr">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://duia.github.io/2017/02/28/简单的排序算法/">
+
+
+
+
+
+  <title>简单的排序算法 | 个人博客</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?d05b0991ea544c8d9c4cb7a57ff5fc4d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-technology">
+          <a href="/technology/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-file-text"></i> <br>
+            
+            技术关注
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br>
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://duia.github.io/2017/02/28/简单的排序算法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="W鹏程">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/pengcheng.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">简单的排序算法</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-28T21:55:00+08:00">
+                2017-02-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="共用的方法："><a href="#共用的方法：" class="headerlink" title="共用的方法："></a>共用的方法：</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 数组生成：随机生成1~20个100范围内的数的数组</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">long</span>[] getArrs()&#123;</span><br><span class="line">    Random random = <span class="keyword">new</span> Random();</span><br><span class="line">    <span class="keyword">long</span>[] arrs;</span><br><span class="line">    <span class="keyword">int</span> count = random.nextInt(<span class="number">20</span>) + <span class="number">1</span>;</span><br><span class="line">    arrs = <span class="keyword">new</span> <span class="keyword">long</span>[count];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> a = <span class="number">0</span>; a &lt; count; a++) &#123;</span><br><span class="line">        arrs[a] = random.nextInt(<span class="number">100</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> arrs;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h3 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 冒泡排序：比较相邻两个数据，如果前边的值大于后边的值，将大值交换到小值的位置，后边的值即大值先有序</span></span><br><span class="line"><span class="comment"> * 比较次数为n(n-1)/2次 ≈n²/2 平均交换次数大约为比较次数的一半，即 n²/4 所以时间复杂度为 O(n²)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">maopao</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">long</span>[] arrs = getArrs();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">long</span> l : arrs) &#123;</span><br><span class="line">        System.out.print(l+<span class="string">" "</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = arrs.length - <span class="number">1</span>; i &gt; <span class="number">0</span>; i--) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; i; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (arrs[j] &gt; arrs[j+<span class="number">1</span>]) &#123;</span><br><span class="line">                <span class="keyword">long</span> temp = arrs[j];</span><br><span class="line">                arrs[j] = arrs[j+<span class="number">1</span>];</span><br><span class="line">                arrs[j+<span class="number">1</span>] = temp;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    System.out.println(<span class="string">""</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">long</span> l : arrs) &#123;</span><br><span class="line">        System.out.print(l+<span class="string">" "</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="选择排序"><a href="#选择排序" class="headerlink" title="选择排序"></a>选择排序</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 选择排序：标记下起始值，比较起始值和后边的每一个值，找出最小值，与起始值互换位置，前边的值即小值先有序</span></span><br><span class="line"><span class="comment"> * 比较次数为n(n-1)/2次 ≈n²/2 最大的交换次数为 n-1次 时间复杂度为 O(n²)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">xuanze</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">long</span>[] arrs = getArrs();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">long</span> l : arrs) &#123;</span><br><span class="line">        System.out.print(l+<span class="string">" "</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arrs.length - <span class="number">1</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">int</span> index = i;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = i + <span class="number">1</span>; j &lt; arrs.length; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (arrs[j] &lt; arrs[index]) &#123;</span><br><span class="line">                index = j;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (i != index) &#123;</span><br><span class="line">            <span class="keyword">long</span> temp = arrs[i];</span><br><span class="line">            arrs[i] = arrs[index];</span><br><span class="line">            arrs[index] = temp;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    System.out.println(<span class="string">""</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">long</span> l : arrs) &#123;</span><br><span class="line">        System.out.print(l+<span class="string">" "</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="插入排序"><a href="#插入排序" class="headerlink" title="插入排序"></a>插入排序</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 插入排序：标记下起始值和起始标记，再前边有序的部分中找到该插入的位置，并移动后边的值。</span></span><br><span class="line"><span class="comment"> * 比较次数为n(n-1)/2次 ≈n²/2 平均交换次数和比较次数的一样 所以时间复杂度为 O(n²)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">charu</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">long</span>[] arrs = getArrs();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">long</span> l : arrs) &#123;</span><br><span class="line">        System.out.print(l+<span class="string">" "</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">long</span> temp;</span><br><span class="line">    <span class="keyword">int</span> k;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; arrs.length; i++) &#123;</span><br><span class="line">        temp = arrs[i];</span><br><span class="line">        k = i;</span><br><span class="line">        <span class="keyword">while</span> (k&gt;<span class="number">0</span> &amp;&amp; temp &lt; arrs[k-<span class="number">1</span>]) &#123;</span><br><span class="line">            arrs[k] = arrs[k-<span class="number">1</span>];</span><br><span class="line">            k--;</span><br><span class="line">        &#125;</span><br><span class="line">        arrs[k] = temp;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    System.out.println(<span class="string">""</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">long</span> l : arrs) &#123;</span><br><span class="line">        System.out.print(l+<span class="string">" "</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="二分查找法"><a href="#二分查找法" class="headerlink" title="二分查找法"></a>二分查找法</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 二分查找：查找有序数据</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">long</span> key)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> start = <span class="number">0</span>, end = arr.length - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (start &lt;= end) &#123;</span><br><span class="line">        count++;</span><br><span class="line">        <span class="keyword">int</span> index = (start + end)/<span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span>(arr[index] == key) &#123;</span><br><span class="line">            <span class="keyword">return</span> index;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(arr[index] &lt; key) &#123;</span><br><span class="line">            start = index + <span class="number">1</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(arr[index] &gt; key) &#123;</span><br><span class="line">            end = index - <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 递归方式实现 二分查找</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> key</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> start</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> end</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">find2</span><span class="params">(<span class="keyword">long</span> key, <span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> index = (start + end)/<span class="number">2</span>;</span><br><span class="line">    <span class="keyword">if</span>(arr[index] == key) &#123;</span><br><span class="line">        <span class="keyword">return</span> index;</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(start &gt; end) &#123;</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>(arr[index] &lt; key) &#123;</span><br><span class="line">            <span class="keyword">return</span> find2(key, index + <span class="number">1</span>, end);</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(arr[index] &gt; key) &#123;</span><br><span class="line">            <span class="keyword">return</span> find2(key, start, index - <span class="number">1</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/简单排序/" rel="tag"># 简单排序</a>
+          
+            <a href="/tags/算法/" rel="tag"># 算法</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/26/Java利用WebSocket实现长连接/" rel="next" title="Java利用WebSocket实现长连接">
+                <i class="fa fa-chevron-left"></i> Java利用WebSocket实现长连接
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/28/高级排序算法/" rel="prev" title="高级排序算法">
+                高级排序算法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/pengcheng.jpg" alt="W鹏程">
+            
+              <p class="site-author-name" itemprop="name">W鹏程</p>
+              <p class="site-description motion-element" itemprop="description">宁在地狱为王，不愿天堂为仆</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/duia" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="duia.online@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#共用的方法："><span class="nav-number">1.</span> <span class="nav-text">共用的方法：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#冒泡排序"><span class="nav-number">2.</span> <span class="nav-text">冒泡排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#选择排序"><span class="nav-number">3.</span> <span class="nav-text">选择排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#插入排序"><span class="nav-number">4.</span> <span class="nav-text">插入排序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二分查找法"><span class="nav-number">5.</span> <span class="nav-text">二分查找法</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">W鹏程</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

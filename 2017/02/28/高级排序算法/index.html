@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="算法,高级排序,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="个人博客" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="学习算法过程中自己写的一些高级排序的算法代码，做点记录，供以后复习。">
+<meta name="keywords" content="算法,高级排序">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高级排序算法">
+<meta property="og:url" content="https://duia.github.io/2017/02/28/高级排序算法/index.html">
+<meta property="og:site_name" content="个人博客">
+<meta property="og:description" content="学习算法过程中自己写的一些高级排序的算法代码，做点记录，供以后复习。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-05-20T05:00:00.003Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="高级排序算法">
+<meta name="twitter:description" content="学习算法过程中自己写的一些高级排序的算法代码，做点记录，供以后复习。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://duia.github.io/2017/02/28/高级排序算法/">
+
+
+
+
+
+  <title>高级排序算法 | 个人博客</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?d05b0991ea544c8d9c4cb7a57ff5fc4d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-technology">
+          <a href="/technology/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-file-text"></i> <br>
+            
+            技术关注
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br>
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://duia.github.io/2017/02/28/高级排序算法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="W鹏程">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/pengcheng.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">高级排序算法</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-28T22:04:00+08:00">
+                2017-02-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>学习算法过程中自己写的一些高级排序的算法代码，做点记录，供以后复习。</p>
+<a id="more"></a>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.wpc.test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.Random;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by admin on 2017/2/14.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">long</span>[] arrS;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//循环 归并 排序</span></span><br><span class="line">        <span class="comment">/*int[] arrA = new int[]&#123;23, 34, 42, 65&#125;;</span></span><br><span class="line"><span class="comment">        int[] arrB = new int[]&#123;12, 21, 38, 58, 65, 75&#125;;</span></span><br><span class="line"><span class="comment">        int[] arrC = new int[10];</span></span><br><span class="line"><span class="comment">        merge(arrA, arrB, arrC);</span></span><br><span class="line"><span class="comment">        for (int i = 0; i &lt; arrC.length; i++) &#123;</span></span><br><span class="line"><span class="comment">            System.out.print(arrC[i]+" ");</span></span><br><span class="line"><span class="comment">        &#125;*/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//        mergeSort();</span></span><br><span class="line"><span class="comment">//        shellSort();</span></span><br><span class="line"><span class="comment">//        partitionIt();</span></span><br><span class="line"><span class="comment">//        System.out.println("");</span></span><br><span class="line">        quickSort();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 循环 归并</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> arrA</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> arrB</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> arrC</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span>[] arrA, <span class="keyword">int</span>[] arrB, <span class="keyword">int</span>[] arrC)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> a = <span class="number">0</span>, b = <span class="number">0</span>, c = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (a &lt; arrA.length &amp;&amp; b &lt; arrB.length) &#123;</span><br><span class="line">            <span class="keyword">if</span> (arrA[a] &lt; arrB[b]) &#123;</span><br><span class="line">                arrC[c++] = arrA[a++];</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                arrC[c++] = arrB[b++];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span> (a &lt; arrA.length) &#123;</span><br><span class="line">            arrC[c++] = arrA[a++];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span> (b &lt; arrB.length) &#123;</span><br><span class="line">            arrC[c++] = arrB[b++];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 递归 归并</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">mergeSort</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> count = <span class="number">10000</span>;</span><br><span class="line">        <span class="keyword">long</span>[] arrs = getArrs(count);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">long</span> l : arrs) &#123;</span><br><span class="line">            System.out.print(l+<span class="string">" "</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">long</span> start = System.currentTimeMillis();</span><br><span class="line">        <span class="keyword">long</span>[] tmpArr = <span class="keyword">new</span> <span class="keyword">long</span>[arrs.length];</span><br><span class="line">        recMergeSort(arrs, <span class="number">0</span>, arrs.length - <span class="number">1</span>, tmpArr);</span><br><span class="line">        <span class="keyword">long</span> end = System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">""</span>);</span><br><span class="line">        System.out.println(end - start);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">long</span> l : arrs) &#123;</span><br><span class="line">            System.out.print(l+<span class="string">" "</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 递归</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> data</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> start</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> end</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">recMergeSort</span><span class="params">(<span class="keyword">long</span>[] data, <span class="keyword">int</span> start, <span class="keyword">int</span> end, <span class="keyword">long</span>[] tmpArr)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (start &gt;= end) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">int</span> mid = (start + end)/<span class="number">2</span>;</span><br><span class="line">            recMergeSort(data, start, mid, tmpArr);</span><br><span class="line">            recMergeSort(data, mid + <span class="number">1</span>, end, tmpArr);</span><br><span class="line">            merge(data, start, mid + <span class="number">1</span>, end, tmpArr);</span><br><span class="line"><span class="comment">//            System.out.println("");</span></span><br><span class="line"><span class="comment">//            for (long l : data) &#123;</span></span><br><span class="line"><span class="comment">//                System.out.print(l+" ");</span></span><br><span class="line"><span class="comment">//            &#125;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 排序</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> data</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> start</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> mid</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> end</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">long</span>[] data, <span class="keyword">int</span> start, <span class="keyword">int</span> mid, <span class="keyword">int</span> end, <span class="keyword">long</span>[] tmpArr)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> a = mid - <span class="number">1</span>, b = start, c = <span class="number">0</span>, n = end - start + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (start &lt;= a &amp;&amp; mid &lt;= end) &#123;</span><br><span class="line">            <span class="keyword">if</span> (data[start] &lt; data[mid]) &#123;</span><br><span class="line">                tmpArr[c++] = data[start++];</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                tmpArr[c++] = data[mid++];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span> (start &lt;= a) &#123;</span><br><span class="line">            tmpArr[c++] = data[start++];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span> (mid &lt;= end) &#123;</span><br><span class="line">            tmpArr[c++] = data[mid++];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            data[b + i] = tmpArr[i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 希尔排序 插入排序的变形 按照h = h * 3 +1计算的间隔进行排序</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">shellSort</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">long</span>[] arrs = getArrs(<span class="number">100</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">long</span> l : arrs) &#123;</span><br><span class="line">            System.out.print(l+<span class="string">" "</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> h = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span> (h &lt;= arrs.length/<span class="number">3</span>) &#123;</span><br><span class="line">            h = h * <span class="number">3</span> +<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">long</span> temp;</span><br><span class="line">        <span class="keyword">int</span> index;</span><br><span class="line">        <span class="keyword">while</span> (h &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = h; i &lt; arrs.length; i++) &#123;</span><br><span class="line">                temp = arrs[i];</span><br><span class="line">                index = i;</span><br><span class="line">                <span class="keyword">while</span> (index &gt; h - <span class="number">1</span> &amp;&amp; temp &lt; arrs[index - h]) &#123;</span><br><span class="line">                    arrs[index] = arrs[index - h];</span><br><span class="line">                    index -= h;</span><br><span class="line">                &#125;</span><br><span class="line">                arrs[index] = temp;</span><br><span class="line">            &#125;</span><br><span class="line">            h = (h - <span class="number">1</span>)/<span class="number">3</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">""</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">long</span> l : arrs) &#123;</span><br><span class="line">            System.out.print(l+<span class="string">" "</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 快速排序</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">quickSort</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">long</span>[] arrs = getArrs(<span class="number">100</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">long</span> l : arrs) &#123;</span><br><span class="line">            System.out.print(l+<span class="string">" "</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">long</span> start = System.currentTimeMillis();</span><br><span class="line">        recQuickSort(arrs, <span class="number">0</span>, arrs.length - <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">long</span> end = System.currentTimeMillis();</span><br><span class="line">        System.out.println(<span class="string">""</span>);</span><br><span class="line">        System.out.println(end - start);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">long</span> l : arrs) &#123;</span><br><span class="line">            System.out.print(l+<span class="string">" "</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">recQuickSort</span> <span class="params">(<span class="keyword">long</span>[] data, <span class="keyword">int</span> left, <span class="keyword">int</span> right)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> size = right - left + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (size &lt;= <span class="number">3</span>) &#123;</span><br><span class="line">            manualSort(data, left, right);</span><br><span class="line"><span class="comment">//            insertionSort(data, left, right);</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">long</span> pivot = medianOf3(data, left, right);<span class="comment">//三项数据取中//data[right];//简单快速排序</span></span><br><span class="line">            <span class="keyword">int</span> index = partitionIt(data, left, right, pivot);</span><br><span class="line">            recQuickSort(data, left, index - <span class="number">1</span>);</span><br><span class="line">            recQuickSort(data, index + <span class="number">1</span>, right);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 三项数据取中</span></span><br><span class="line"><span class="comment">     * 如果数据默认本来就是顺序或者倒叙排列，排序效率为O(N2),利用三项数据取中法，可以消除</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> data</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> left</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> right</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">long</span> <span class="title">medianOf3</span> <span class="params">(<span class="keyword">long</span>[] data, <span class="keyword">int</span> left, <span class="keyword">int</span> right)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> center = (left + right)/<span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span> (data[left] &gt; data[right]) &#123;</span><br><span class="line">            swap(data, left, right);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (data[left] &gt; data[center]) &#123;</span><br><span class="line">            swap(data, left, center);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (data[center] &gt; data[right]) &#123;</span><br><span class="line">            swap(data, center, right);</span><br><span class="line">        &#125;</span><br><span class="line">        swap(data, center, right - <span class="number">1</span>);<span class="comment">//将找到的枢纽放在数据后边（三项数据最大的数据前边），类似于取最后一位为枢纽</span></span><br><span class="line">        <span class="keyword">return</span> data[right - <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 快速排序中处理小于切割界限时处理方法</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> data</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> left</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> right</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">manualSort</span> <span class="params">(<span class="keyword">long</span>[] data, <span class="keyword">int</span> left, <span class="keyword">int</span> right)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> size = right - left + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (size &lt;= <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span> (size == <span class="number">2</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (data[left] &gt; data[right]) &#123;</span><br><span class="line">                swap(data, left, right);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (data[left] &gt; data[right]) &#123;</span><br><span class="line">                swap(data, left, right);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (data[left] &gt; data[right - <span class="number">1</span>]) &#123;</span><br><span class="line">                swap(data, left, right - <span class="number">1</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (data[right - <span class="number">1</span>] &gt; data[right]) &#123;</span><br><span class="line">                swap(data, right - <span class="number">1</span>, right);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 快速排序中处理小于切割界限时处理方法 也可以使用插入排序</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> data</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> left</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> right</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">insertionSort</span> <span class="params">(<span class="keyword">long</span>[] data, <span class="keyword">int</span> left, <span class="keyword">int</span> right)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">long</span> temp;</span><br><span class="line">        <span class="keyword">int</span> j;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = left + <span class="number">1</span>; i &lt;= right; i++) &#123;</span><br><span class="line">            temp = data[i];</span><br><span class="line">            j = i;</span><br><span class="line">            <span class="keyword">while</span> (j &gt;left &amp;&amp; temp &lt; data[j-<span class="number">1</span>]) &#123;</span><br><span class="line">                data[i] = data[j-<span class="number">1</span>];</span><br><span class="line">                j--;</span><br><span class="line">            &#125;</span><br><span class="line">            data[j] = temp;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 划分</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> data</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> left</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> right</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> pivot</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">partitionIt</span><span class="params">(<span class="keyword">long</span>[] data, <span class="keyword">int</span> left, <span class="keyword">int</span> right, <span class="keyword">long</span> pivot)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> leftPrt = left, rightPrt = right - <span class="number">1</span>;<span class="comment">//三项数据取中，可以将首位项跳过，因为先前已经确定好分区位置</span></span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            <span class="keyword">while</span> (data[++leftPrt] &lt; pivot) &#123;&#125;<span class="comment">//无需leftPrt &lt; right的判断，因为pivot=data[right]，最终肯定不会越过right处</span></span><br><span class="line">            <span class="keyword">while</span> (data[--rightPrt] &gt; pivot) &#123;&#125;<span class="comment">//应用了三项数据取中无需rightPrt &gt; left，确定pivot前三个数据已排序</span></span><br><span class="line">            <span class="keyword">if</span> (leftPrt &gt;= rightPrt) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                swap(data, leftPrt, rightPrt);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//将找到的划分点数据和末尾的枢纽互换</span></span><br><span class="line">        swap(data, leftPrt, right - <span class="number">1</span>);<span class="comment">//三项数据取中末尾要前一位上</span></span><br><span class="line">        <span class="keyword">return</span> leftPrt;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">swap</span> <span class="params">(<span class="keyword">long</span>[] data, <span class="keyword">int</span> left, <span class="keyword">int</span> right)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">long</span> temp;</span><br><span class="line">        temp = data[left];</span><br><span class="line">        data[left] = data[right];</span><br><span class="line">        data[right] = temp;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">long</span>[] getArrs(<span class="keyword">int</span> count)&#123;</span><br><span class="line">        Random random = <span class="keyword">new</span> Random();</span><br><span class="line">        <span class="keyword">long</span>[] arrs;</span><br><span class="line">        arrs = <span class="keyword">new</span> <span class="keyword">long</span>[count];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> a = <span class="number">0</span>; a &lt; count; a++) &#123;</span><br><span class="line">            arrs[a] = random.nextInt(<span class="number">100</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> arrs;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/算法/" rel="tag"># 算法</a>
+          
+            <a href="/tags/高级排序/" rel="tag"># 高级排序</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/28/简单的排序算法/" rel="next" title="简单的排序算法">
+                <i class="fa fa-chevron-left"></i> 简单的排序算法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/16/利用Kettle进行数据迁移/" rel="prev" title="利用Kettle进行数据迁移">
+                利用Kettle进行数据迁移 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/pengcheng.jpg" alt="W鹏程">
+            
+              <p class="site-author-name" itemprop="name">W鹏程</p>
+              <p class="site-description motion-element" itemprop="description">宁在地狱为王，不愿天堂为仆</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/duia" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="duia.online@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">W鹏程</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

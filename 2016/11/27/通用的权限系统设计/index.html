@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="权限系统,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="个人博客" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="以前也做过大概两三次的权限系统了吧，每次开发的时候都需要去根据相应的业务设置具体的权限规则及管理系统。所以产生了这样的想法，能不能设计一个比较通用的权限管理系统，以后如果在遇到需要权限系统可以直接套用。经过查资料、自己整理、开发测试，整理出了一套比较通用的权限管理系统，以做记录，和大家共同探讨学习，看看哪里有不对的、或什么更好的设计方案，一起进步。 不敢说很通用，任何系统的不存在最完美，只有更完美">
+<meta name="keywords" content="权限系统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通用的权限系统设计">
+<meta property="og:url" content="https://duia.github.io/2016/11/27/通用的权限系统设计/index.html">
+<meta property="og:site_name" content="个人博客">
+<meta property="og:description" content="以前也做过大概两三次的权限系统了吧，每次开发的时候都需要去根据相应的业务设置具体的权限规则及管理系统。所以产生了这样的想法，能不能设计一个比较通用的权限管理系统，以后如果在遇到需要权限系统可以直接套用。经过查资料、自己整理、开发测试，整理出了一套比较通用的权限管理系统，以做记录，和大家共同探讨学习，看看哪里有不对的、或什么更好的设计方案，一起进步。 不敢说很通用，任何系统的不存在最完美，只有更完美">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://duia.github.io/upload/2019/1/user_role_permission20190216145048318.png">
+<meta property="og:image" content="https://duia.github.io/upload/2019/1/user2019021614504821.png">
+<meta property="og:image" content="https://duia.github.io/upload/2019/1/menu_button20190216145048519.png">
+<meta property="og:image" content="https://duia.github.io/upload/2019/1/role_user20190216145048277.png">
+<meta property="og:image" content="https://duia.github.io/upload/2019/1/role_permission20190216145048952.png">
+<meta property="og:updated_time" content="2019-05-11T15:00:00.099Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="通用的权限系统设计">
+<meta name="twitter:description" content="以前也做过大概两三次的权限系统了吧，每次开发的时候都需要去根据相应的业务设置具体的权限规则及管理系统。所以产生了这样的想法，能不能设计一个比较通用的权限管理系统，以后如果在遇到需要权限系统可以直接套用。经过查资料、自己整理、开发测试，整理出了一套比较通用的权限管理系统，以做记录，和大家共同探讨学习，看看哪里有不对的、或什么更好的设计方案，一起进步。 不敢说很通用，任何系统的不存在最完美，只有更完美">
+<meta name="twitter:image" content="https://duia.github.io/upload/2019/1/user_role_permission20190216145048318.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://duia.github.io/2016/11/27/通用的权限系统设计/">
+
+
+
+
+
+  <title>通用的权限系统设计 | 个人博客</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?d05b0991ea544c8d9c4cb7a57ff5fc4d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-technology">
+          <a href="/technology/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-file-text"></i> <br>
+            
+            技术关注
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br>
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://duia.github.io/2016/11/27/通用的权限系统设计/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="W鹏程">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/pengcheng.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">通用的权限系统设计</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-27T16:13:00+08:00">
+                2016-11-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/设计/" itemprop="url" rel="index">
+                    <span itemprop="name">设计</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>以前也做过大概两三次的权限系统了吧，每次开发的时候都需要去根据相应的业务设置具体的权限规则及管理系统。所以产生了这样的想法，能不能设计一个比较通用的权限管理系统，以后如果在遇到需要权限系统可以直接套用。经过查资料、自己整理、开发测试，整理出了一套比较通用的权限管理系统，以做记录，和大家共同探讨学习，看看哪里有不对的、或什么更好的设计方案，一起进步。</p>
+<p>不敢说很通用，任何系统的不存在最完美，只有更完美，所以我也只能说是比较通用，由于本人是做java开发的，所以实现和测试全是通过java语言进行开发的，但本人感觉思想是通用的。以下的设计也是基于网络上现有的比较大路的做法，结合自己以前的开发经验进行的整理和总结，大部分博客网站都比较粗略提点，所以也促使我自己整理一套比较容易阅读的设计方案。<br><a id="more"></a></p>
+<h2 id="数据库设计"><a href="#数据库设计" class="headerlink" title="数据库设计"></a>数据库设计</h2><p>先上图，以下是我关于数据库的设计，具体有什么注意点我会在之后一一介绍：</p>
+<p><img src="/upload/2019/1/user_role_permission20190216145048318.png" alt="image"></p>
+<h3 id="主体数据"><a href="#主体数据" class="headerlink" title="主体数据"></a>主体数据</h3><p>user（用户表）、role（角色表）、permission（权限表），三个表构成了权限系统的主体，这也就是常说的RBAC（Role-Based Access Control，基于角色的访问控制）权限管理。</p>
+<p>用户与角色之间、角色与权限之间，都是多对多的关系，所以需要中间表进行关联维护，即图中role_user表和role_permission表。</p>
+<p>用法：有了这样的关系，当人员登陆后，根据人员获取角色，通过角色获取权限的通道就打通了。</p>
+<h3 id="权限数据控制"><a href="#权限数据控制" class="headerlink" title="权限数据控制"></a>权限数据控制</h3><p>我们经常用到的系统有具体的菜单、页面上有按钮、有可下载的文件等等，其实这些都不是权限，这只是系统中可操作的一些资源，我们一般也是在控制这些资源的可见性、是否有使用的权利，如某个菜单是否可见、某个按钮是否可点击、某个文件是否可下载等。所以我们也就将这些资源作为了权利的载体，对权限的控制也就是在控制资源的可见可用性。</p>
+<p>这段话不知道表达明白我的意思没，为啥会先写这么一段话，因为我在很多网站上看到大家其实都没明白了资源和权限的关系，甚至有人会问：权限表和菜单表具体在表里面是怎么体现的，我怎样把这几个功能菜单给某个权限呢？这就是问题的关键，明白了上边我所说的，也就明白了这个问题了。下边我会给出两种方案，具体实现资源与权限的关联。</p>
+<p>回归到上边表设计上，permission（权限表）和menu（菜单表）、button（按钮表）、file（文件表）其实是一一对应的关系，每产生一个菜单，也就相应的产生了一条权限数据。所以为了区分具体的资源权限，permission表有个字段permission_type，可以定义不同的常量字符串来区分。</p>
+<p>这时候有两种方案可以采取：</p>
+<ul>
+<li>每次维护菜单、按钮、文件等资源时，同时维护权限表中相应的权限数据，之后为角色授权时，主要维护role_permission（角色权限关联表）。</li>
+<li>每次维护菜单、按钮、文件等资源时不维护权限数据，如上边所说的隐性的将三种资源数据看成权限数据，在给角色授权时，相应的写入到permission表中。（需要加个角色id字段）</li>
+</ul>
+<p>个人感觉方案1比较好点，方案2的缺点在于时间长了权限表中的数据量会比较大。</p>
+<h3 id="其他扩展"><a href="#其他扩展" class="headerlink" title="其他扩展"></a>其他扩展</h3><h4 id="如上设计权限表和资源表一对一关联的结构，有两个好处"><a href="#如上设计权限表和资源表一对一关联的结构，有两个好处" class="headerlink" title="如上设计权限表和资源表一对一关联的结构，有两个好处"></a>如上设计权限表和资源表一对一关联的结构，有两个好处</h4><p>其一在维护资源数据的时候产生的权限数据，在授权时就无需在关注具体资源类型，所有的权限数据当成一种数据处理即可。</p>
+<p>其二方便扩展，每新增一种资源时，多添加一个表和权限类型即可。如上图有个operation（操作表），在开发过程中发现有部分权限都不属于以上三种资源，即新扩展一种资源。</p>
+<h4 id="人员授权、分组授权"><a href="#人员授权、分组授权" class="headerlink" title="人员授权、分组授权"></a>人员授权、分组授权</h4><p>如上图设计，部门对人员属于一对多的关系，如有一个成员可以属于多个分组或部门的情况可以添加中间表进行维护。</p>
+<p>如需要对某个人员进行授权，新增人员与权限之间的关联表即可，同理，部门或分组授权同理。</p>
+<h2 id="权限码的使用"><a href="#权限码的使用" class="headerlink" title="权限码的使用"></a>权限码的使用</h2><p>有无权限的判断主要通过权限码来判断，为不同的资源赋予不同的资源编码，在每次使用时利用权限码判断是否有权限。为了提高效率我们可以应用shiro整合项目进行权限的判断。</p>
+<p>我的项目是springMVC，整合shiro的过程网上一搜一大片，我就不在这里写具体的实现过程了，我上边设计的权限数据库的实现与shiro是没有关系的，我们完全可以自己实现权限判断的逻辑，当然利用shiro可以更高效的完成权限判断，并利用shiro提供的一整套注解和标签进行权限控制。在这里我就提点一下shiro的底层原理。</p>
+<p>其实shiro底层实现权限判断的功能就是通过对比权限码字符串来判断的。shiro默认的为我们提供了一种效率较高的对比规则，即用“<code>:</code>”来区分权限的层级关系，并可以利用“<code>*</code>”来代表该层级的全部权限。之所以要提这一点是因为我发现网上好多地方直接全部都是直接利用这种规则，没有任何说明，造成了使用误区，让咱们误以为利用shiro只能按那种规则进行权限码的规定。</p>
+<p>WildcardPermission.java中implies方法（shiro默认的对比器）<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">implies</span><span class="params">(Permission p)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// By default only supports comparisons with other WildcardPermissions</span></span><br><span class="line">    <span class="keyword">if</span> (!(p <span class="keyword">instanceof</span> WildcardPermission)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    WildcardPermission wp = (WildcardPermission) p;</span><br><span class="line"></span><br><span class="line">    List&lt;Set&lt;String&gt;&gt; otherParts = wp.getParts();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (Set&lt;String&gt; otherPart : otherParts) &#123;</span><br><span class="line">        <span class="comment">// If this permission has less parts than the other permission, everything after the number of parts contained</span></span><br><span class="line">        <span class="comment">// in this permission is automatically implied, so return true</span></span><br><span class="line">        <span class="keyword">if</span> (getParts().size() - <span class="number">1</span> &lt; i) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            Set&lt;String&gt; part = getParts().get(i);</span><br><span class="line">            <span class="keyword">if</span> (!part.contains(WILDCARD_TOKEN) &amp;&amp; !part.containsAll(otherPart)) &#123;<span class="comment">//WILDCARD_TOKEN = "*"</span></span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// If this permission has more parts than the other parts, only imply it if all of the other parts are wildcards</span></span><br><span class="line">    <span class="keyword">for</span> (; i &lt; getParts().size(); i++) &#123;</span><br><span class="line">        Set&lt;String&gt; part = getParts().get(i);</span><br><span class="line">        <span class="keyword">if</span> (!part.contains(WILDCARD_TOKEN)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>有兴趣的大家跟踪一下这段代码，可以学到一些知识，shiro的对比器会将已有权限的权限码和要判断的权限码用“<code>:</code>”分割成集合，按对应位置对比，发现是“<code>*</code>”时直接跳过对比下一位置。</p>
+<p>所以既然要利用shiro提供便捷，就需要按照shiro的规则来指定权限码，可以将我们设计的权限数据中菜单看成权限码的第一级，按钮是第二级，之间用“<code>:</code>”分割，更具体的需要大家去设计了。</p>
+<p>个人人为，如果将权限码设计好完全可以实现更灵活的细粒度权限控制，但目前我还没想到，大家有什么好想法可以共享一下。</p>
+<h2 id="界面设计"><a href="#界面设计" class="headerlink" title="界面设计"></a>界面设计</h2><p>这一块的东西就是仁者见仁智者见智了，如下是我的简单实现设计，给大家个参考：</p>
+<p>人员管理的界面：<br><img src="/upload/2019/1/user2019021614504821.png" alt="image"></p>
+<p>菜单管理的界面：<br><img src="/upload/2019/1/menu_button20190216145048519.png" alt="image"></p>
+<p>人员授权的界面：<br><img src="/upload/2019/1/role_user20190216145048277.png" alt="image"></p>
+<p>角色授权的界面：<br><img src="/upload/2019/1/role_permission20190216145048952.png" alt="image"></p>
+<p>以上全为个人见解，如有错误，希望大家指出。或者有更好的设计或观点也可以分享一下。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/权限系统/" rel="tag"># 权限系统</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/27/spring源码阅读-context/" rel="next" title="spring源码阅读-context">
+                <i class="fa fa-chevron-left"></i> spring源码阅读-context
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/04/讲解最详细的shiro的权限认证原理/" rel="prev" title="讲解最详细的shiro的权限认证原理">
+                讲解最详细的shiro的权限认证原理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/pengcheng.jpg" alt="W鹏程">
+            
+              <p class="site-author-name" itemprop="name">W鹏程</p>
+              <p class="site-description motion-element" itemprop="description">宁在地狱为王，不愿天堂为仆</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/duia" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="duia.online@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据库设计"><span class="nav-number">1.</span> <span class="nav-text">数据库设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#主体数据"><span class="nav-number">1.1.</span> <span class="nav-text">主体数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#权限数据控制"><span class="nav-number">1.2.</span> <span class="nav-text">权限数据控制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他扩展"><span class="nav-number">1.3.</span> <span class="nav-text">其他扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#如上设计权限表和资源表一对一关联的结构，有两个好处"><span class="nav-number">1.3.1.</span> <span class="nav-text">如上设计权限表和资源表一对一关联的结构，有两个好处</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#人员授权、分组授权"><span class="nav-number">1.3.2.</span> <span class="nav-text">人员授权、分组授权</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#权限码的使用"><span class="nav-number">2.</span> <span class="nav-text">权限码的使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#界面设计"><span class="nav-number">3.</span> <span class="nav-text">界面设计</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">W鹏程</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
