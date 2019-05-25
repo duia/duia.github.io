@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="js,ejs,html,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="个人博客" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="一、什么是EJSEJS是一个JavaScript模板库，用来从JSON数据中生成HTML字符串。 二、为什么要使用EJS与最初的JavaScript相比较，一些不太了解你的代码的人可以更容易地通过EJS模板代码看得懂你的代码。 让我们放松一下，一起来享受下令人激动的干净简洁的感觉。 总之可以让代码更加干净整洁，让人易懂。">
+<meta name="keywords" content="js,ejs,html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="EJS学习总结">
+<meta property="og:url" content="https://duia.github.io/2017/07/28/EJS学习总结/index.html">
+<meta property="og:site_name" content="个人博客">
+<meta property="og:description" content="一、什么是EJSEJS是一个JavaScript模板库，用来从JSON数据中生成HTML字符串。 二、为什么要使用EJS与最初的JavaScript相比较，一些不太了解你的代码的人可以更容易地通过EJS模板代码看得懂你的代码。 让我们放松一下，一起来享受下令人激动的干净简洁的感觉。 总之可以让代码更加干净整洁，让人易懂。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://duia.github.io/upload/2019/1/ejs120190216143859415.png">
+<meta property="og:image" content="https://duia.github.io/upload/2019/1/ejs220190216143859306.png">
+<meta property="og:updated_time" content="2019-05-19T00:00:00.003Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="EJS学习总结">
+<meta name="twitter:description" content="一、什么是EJSEJS是一个JavaScript模板库，用来从JSON数据中生成HTML字符串。 二、为什么要使用EJS与最初的JavaScript相比较，一些不太了解你的代码的人可以更容易地通过EJS模板代码看得懂你的代码。 让我们放松一下，一起来享受下令人激动的干净简洁的感觉。 总之可以让代码更加干净整洁，让人易懂。">
+<meta name="twitter:image" content="https://duia.github.io/upload/2019/1/ejs120190216143859415.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://duia.github.io/2017/07/28/EJS学习总结/">
+
+
+
+
+
+  <title>EJS学习总结 | 个人博客</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?d05b0991ea544c8d9c4cb7a57ff5fc4d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-technology">
+          <a href="/technology/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-file-text"></i> <br>
+            
+            技术关注
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br>
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://duia.github.io/2017/07/28/EJS学习总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="W鹏程">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/pengcheng.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">EJS学习总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-28T21:50:00+08:00">
+                2017-07-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/js/" itemprop="url" rel="index">
+                    <span itemprop="name">js</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="一、什么是EJS"><a href="#一、什么是EJS" class="headerlink" title="一、什么是EJS"></a>一、什么是EJS</h3><p>EJS是一个JavaScript模板库，用来从JSON数据中生成HTML字符串。</p>
+<h3 id="二、为什么要使用EJS"><a href="#二、为什么要使用EJS" class="headerlink" title="二、为什么要使用EJS"></a>二、为什么要使用EJS</h3><p>与最初的JavaScript相比较，一些不太了解你的代码的人可以更容易地通过EJS模板代码看得懂你的代码。 让我们放松一下，一起来享受下令人激动的干净简洁的感觉。</p>
+<p>总之可以让代码更加干净整洁，让人易懂。</p>
+<a id="more"></a>
+<p>可以看如下的例子：</p>
+<p>这是用javascript实现的代码<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> html = <span class="string">"&lt;h1&gt;"</span>+data.title+<span class="string">"&lt;/h1&gt;"</span></span><br><span class="line">html += <span class="string">"&lt;ul&gt;"</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>; i&lt;data.supplies.length; i++) &#123;</span><br><span class="line">    html += <span class="string">"&lt;li&gt;&lt;a href='supplies/"</span>+data.supplies[i]+<span class="string">"'&gt;"</span></span><br><span class="line">    html += data.supplies[i]+<span class="string">"&lt;/a&gt;&lt;/li&gt;"</span></span><br><span class="line">&#125;</span><br><span class="line">html += <span class="string">"&lt;/ul&gt;"</span></span><br></pre></td></tr></table></figure></p>
+<p>最终要实现的效果如下：</p>
+<p><img src="/upload/2019/1/ejs120190216143859415.png" alt="image"></p>
+<p>但是上面的代码看起来很乱，虽然实现了功能，但是不容易让人弄懂。不仅代码丑陋，而且你的HTML结构完全在JavaScript代码中丢失。</p>
+<p>下面学习EJS同样实现上面的功效，它的工作原理如下：</p>
+<p><img src="/upload/2019/1/ejs220190216143859306.png" alt="image"></p>
+<p>使用EJS来找回你的明确、维护性良好的HTML代码结构。</p>
+<p>注:data是json对象，不能使json字符串。</p>
+<p>在HTML中引入EJS,以使javascript能够使用它，引入EJS的语句如下：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"/js/ejs.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>创建一个EJS模板,命名为<code>cleaning.ejs</code>文件，内容如下：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span><span class="tag">&lt;<span class="name">%=title</span> %&gt;</span><span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span><br><span class="line">    &lt;% for(var i=0; i&lt;supplies.length; i++) &#123; %&gt;</span><br><span class="line">        <span class="tag">&lt;<span class="name">li</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">'supplies/&lt;%=supplies[i] %&gt;'</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">%=</span> <span class="attr">supplies</span>[<span class="attr">i</span>] %&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">%</span> &#125; %&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>我的HTML文档如下，引入EJS,并更加我们的提供EJS模板创建EJS对象，然后调用EJS对象成员函数解析JSON对象到模板中。<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"/js/ejs.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript"><span class="function"><span class="keyword">function</span> <span class="title">myfunction</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript"><span class="keyword">var</span> data=<span class="string">'&#123;"title":"cleaning","supplies":["mop","broom","duster"]&#125;'</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> html = <span class="keyword">new</span> EJS(&#123;<span class="attr">url</span>: <span class="string">'/js/tmpl/cleaning.ejs'</span>&#125;).render(<span class="built_in">JSON</span>.parse(data));</span></span><br><span class="line"><span class="javascript">    <span class="comment">//JSON.parse(data) 把JSON字符串解析为原生的javascript值。</span></span></span><br><span class="line"><span class="undefined">    alert(html);</span></span><br><span class="line"><span class="javascript">    <span class="built_in">document</span>.getElementById(<span class="string">"div1"</span>).innerHTML=html;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">onclick</span>=<span class="string">"myfunction()"</span>&gt;</span>点击<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"div1"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>从上面这个例子我们可以看到EJS模板的基本用法。</p>
+<h3 id="三、下面介绍下EJS的语法和功能："><a href="#三、下面介绍下EJS的语法和功能：" class="headerlink" title="三、下面介绍下EJS的语法和功能："></a>三、下面介绍下EJS的语法和功能：</h3><ol>
+<li>缓存功能，能够缓存已经解析好的html模版</li>
+<li><p><code>&lt;% code %&gt;</code>用于执行其中javascript代码。</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;% alert(&apos;hello world&apos;) %&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>&lt;%= code %&gt;</code>会对code进行html转义；</p>
+<ul>
+<li><code>&lt;h1&gt;&lt;%=title %&gt;&lt;/h1&gt;</code>                    注：会把title里面存的值给显示出来在h1中。</li>
+<li><code>&lt;p&gt;&lt;%= &#39;hello world&#39; %&gt;&lt;/p&gt;</code>             注：会把hello world显示在h1中。</li>
+<li><code>&lt;h1&gt;&lt;%= &#39;&lt;b&gt;hello world&lt;/b&gt;&#39; %&gt;&lt;/h1&gt;</code>    注：会把hello world变粗，然后显示在h1中。</li>
+</ul>
+</li>
+<li><code>&lt;%- code %&gt;</code>将不会进行转义<br>这一行代码不会执行，像是被注释了一样，然后显示原来的html。也不会影响整个页面的执行。<ul>
+<li><code>&lt;h1&gt;&lt;%-title %&gt;asd&lt;/h1&gt;</code>          最后显示asd，及显示原网页</li>
+<li><code>&lt;p&gt;&lt;%# &#39;hello world&#39; %&gt;asd&lt;/p&gt;</code>   最后显示asd，及显示原网页</li>
+</ul>
+</li>
+<li><p>支持自定义标签<br> ejs 里，默认的闭合标记是 <code>&lt;%  .. %&gt;</code>，我们也可以定义自己的标签。例如：</p>
+ <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">app.set(<span class="string">"view options"</span>,&#123;</span><br><span class="line">   <span class="string">"open"</span>:<span class="string">"&#123;&#123;"</span>,</span><br><span class="line">   <span class="string">"close"</span>:<span class="string">"&#125;&#125;"</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>提供一些辅助函数，用于模版中使用</p>
+<ol>
+<li>first，返回数组的第一个元素；</li>
+<li>last，返回数组的最后一个元素；</li>
+<li>capitalize，返回首字母大写的字符串；</li>
+<li>downcase，返回字符串的小写；</li>
+<li>upcase，返回字符串的大写；</li>
+<li>sort，排序（Object.create(obj).sort()？）；</li>
+<li>sort_by:’prop’，按照指定的prop属性进行升序排序；</li>
+<li>size，返回长度，即length属性，不一定非是数组才行；</li>
+<li>plus:n，加上n，将转化为Number进行运算；</li>
+<li>minus:n，减去n，将转化为Number进行运算；</li>
+<li>times:n，乘以n，将转化为Number进行运算；</li>
+<li>divided_by:n，除以n，将转化为Number进行运算；</li>
+<li>join:’val’，将数组用’val’最为分隔符，进行合并成一个字符串；</li>
+<li>truncate:n，截取前n个字符，超过长度时，将返回一个副本</li>
+<li>truncate_words:n，取得字符串中的前n个word，word以空格进行分割；</li>
+<li>replace:pattern,substitution，字符串替换，substitution不提供将删除匹配的子串；</li>
+<li>prepend:val，如果操作数为数组，则进行合并；为字符串则添加val在前面；</li>
+<li>append:val，如果操作数为数组，则进行合并；为字符串则添加val在后面；</li>
+<li>map:’prop’，返回对象数组中属性为prop的值组成的数组；</li>
+<li>reverse，翻转数组或字符串；</li>
+<li>get:’prop’，取得属性为’prop’的值；</li>
+<li>json，转化为json格式字符串</li>
+</ol>
+</li>
+<li>利用<code>&lt;%- include filename %&gt;</code>加载其他页面模版<h3 id="四、使用创建好的EJS模板"><a href="#四、使用创建好的EJS模板" class="headerlink" title="四、使用创建好的EJS模板"></a>四、使用创建好的EJS模板</h3></li>
+</ol>
+<p>基于我们之前写的模拟生成一个EJS对象<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> EJS(&#123;<span class="attr">url</span>: <span class="string">'/js/tmpl/cleaning.ejs'</span>&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>对象有下面两个成员函数</p>
+<ul>
+<li><code>ejs.compile(str, options)</code> 将返回内部解析好的Function函数</li>
+<li><p><code>ejs.render(str, options)</code> 返回经过解析的字符串，ejs的render函数有两个参数 第一个是字符串，第二个是可选的对象，和其他javascript模版一样需要渲染的数据也是包含在option对象中的。</p>
+  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ejs.render(str,option);  <span class="comment">// 渲染字符串 str 一般是通过nodejs文件系统的readfile方法读取</span></span><br><span class="line">ejs.render(str,&#123;</span><br><span class="line">    data : user_data  <span class="comment">// 需要渲染的数据</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>  其中options的一些参数为：</p>
+<ol>
+<li>cache：是否缓存解析后的模版，需要filename作为key；</li>
+<li>filename：模版文件名；</li>
+<li>scope：complile后的Function执行所在的上下文环境；</li>
+<li>debug：标识是否是debeg状态，debug为true则会输出生成的Function内容；</li>
+<li>compileDebug：标识是否是编译debug，为true则会生成解析过程中的跟踪信息，用于调试；</li>
+<li>client，标识是否用于浏览器客户端运行，为true则返回解析后的可以单独运行的Function函数；</li>
+<li>open，代码开头标记，默认为’&lt;%’；</li>
+<li>close，代码结束标记，默认为’%&gt;’；</li>
+<li><p>其他的一些用于解析模版时提供的变量。</p>
+<p>在express中使用时，options参数将由response.render进行传入，其中包含了一些express中的设置，以及用户提供的变量值。</p>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="五、最后总结一下EJS的应用场所"><a href="#五、最后总结一下EJS的应用场所" class="headerlink" title="五、最后总结一下EJS的应用场所"></a>五、最后总结一下EJS的应用场所</h3><ul>
+<li><p>用JavaScript创建HTML字符串</p>
+<p>  正如我们在新手教程中所讨论的，在JavaScript中拼字符串的缺点是可维护性不好。当你在JavaScript中将这些字符串拼到一起时，很难看出你正在写的HTML是什么-–|一个你页面展现的结构。而使用模板可以让你通过代码的空行和缩进来清楚地展现出你的HTML。</p>
+</li>
+<li><p>基于WebService的AJAX网站开发</p>
+<p>  EJS可以接收WebService异步传送过来的JSON格式的数据，将这种数据直接传入你的模板里，然后将结果插入到你的页面中。你所需要做的只是通过以下代码:</p>
+  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> EJS(&#123;<span class="attr">url</span>: <span class="string">'comments.ejs'</span>&#125;).update(<span class="string">'element_id'</span>, <span class="string">'/comments.json'</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>程序换肤功能</p>
+<p>  如果你想给用户自制页面显示的功能，EJS提供了非常适合的机制。EJS的模板只在浏览器里执行，因此对你的服务器没有任何安全风险。你可以允许你的用户上传EJS模板以及其关联的样式表，从而实现定制你的网站页面的功能。</p>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/js/" rel="tag"># js</a>
+          
+            <a href="/tags/ejs/" rel="tag"># ejs</a>
+          
+            <a href="/tags/html/" rel="tag"># html</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/11/MongoDB的增删改查/" rel="next" title="MongoDB的增删改查">
+                <i class="fa fa-chevron-left"></i> MongoDB的增删改查
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/02/17/springboot+mongo分库分表通用策略/" rel="prev" title="springboot+mongo分库分表通用策略">
+                springboot+mongo分库分表通用策略 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/pengcheng.jpg" alt="W鹏程">
+            
+              <p class="site-author-name" itemprop="name">W鹏程</p>
+              <p class="site-description motion-element" itemprop="description">宁在地狱为王，不愿天堂为仆</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/duia" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="duia.online@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、什么是EJS"><span class="nav-number">1.</span> <span class="nav-text">一、什么是EJS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、为什么要使用EJS"><span class="nav-number">2.</span> <span class="nav-text">二、为什么要使用EJS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、下面介绍下EJS的语法和功能："><span class="nav-number">3.</span> <span class="nav-text">三、下面介绍下EJS的语法和功能：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、使用创建好的EJS模板"><span class="nav-number">4.</span> <span class="nav-text">四、使用创建好的EJS模板</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、最后总结一下EJS的应用场所"><span class="nav-number">5.</span> <span class="nav-text">五、最后总结一下EJS的应用场所</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">W鹏程</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

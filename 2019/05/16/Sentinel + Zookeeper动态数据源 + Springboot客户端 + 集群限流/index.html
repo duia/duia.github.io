@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Sentinel,限流,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="个人博客" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="Sentinel: 分布式系统的流量防卫兵Sentinel 是什么？随着微服务的流行，服务和服务之间的稳定性变得越来越重要。Sentinel 以流量为切入点，从流量控制、熔断降级、系统负载保护等多个维度保护服务的稳定性。 快速上手可以参照官网给出的新手指南进行尝试了解。 详细介绍 本文主要对实际开发中遇到的问题，以及官网推荐的使用方式进行整合的过程遇到的问题进行整理。 Sentinel + Zo">
+<meta name="keywords" content="Sentinel,限流">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sentinel + Zookeeper动态数据源 + Springboot客户端 + 集群限流">
+<meta property="og:url" content="https://duia.github.io/2019/05/16/Sentinel + Zookeeper动态数据源 + Springboot客户端 + 集群限流/index.html">
+<meta property="og:site_name" content="个人博客">
+<meta property="og:description" content="Sentinel: 分布式系统的流量防卫兵Sentinel 是什么？随着微服务的流行，服务和服务之间的稳定性变得越来越重要。Sentinel 以流量为切入点，从流量控制、熔断降级、系统负载保护等多个维度保护服务的稳定性。 快速上手可以参照官网给出的新手指南进行尝试了解。 详细介绍 本文主要对实际开发中遇到的问题，以及官网推荐的使用方式进行整合的过程遇到的问题进行整理。 Sentinel + Zo">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9434884/43697219-3cb4ef3a-9975-11e8-9a9c-73f4f537442d.png">
+<meta property="og:image" content="https://github.com/alibaba/Sentinel/wiki/image/resourceTree.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9434884/48189045-2ae58400-e37a-11e8-84aa-2e2c0dd042e2.png">
+<meta property="og:image" content="https://camo.githubusercontent.com/96b07d598c9eee5a513801cecc68f266fbe58d14/68747470733a2f2f63646e2e6e6c61726b2e636f6d2f6c61726b2f302f323031382f706e672f34373638382f313533363636303239363237332d34663434306262612d356239652d343230352d393430322d6662363038336236363931322e706e67">
+<meta property="og:image" content="https://user-images.githubusercontent.com/9434884/45406233-645e8380-b698-11e8-8199-0c917403238f.png">
+<meta property="og:updated_time" content="2019-05-23T12:00:00.006Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sentinel + Zookeeper动态数据源 + Springboot客户端 + 集群限流">
+<meta name="twitter:description" content="Sentinel: 分布式系统的流量防卫兵Sentinel 是什么？随着微服务的流行，服务和服务之间的稳定性变得越来越重要。Sentinel 以流量为切入点，从流量控制、熔断降级、系统负载保护等多个维度保护服务的稳定性。 快速上手可以参照官网给出的新手指南进行尝试了解。 详细介绍 本文主要对实际开发中遇到的问题，以及官网推荐的使用方式进行整合的过程遇到的问题进行整理。 Sentinel + Zo">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/9434884/43697219-3cb4ef3a-9975-11e8-9a9c-73f4f537442d.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://duia.github.io/2019/05/16/Sentinel + Zookeeper动态数据源 + Springboot客户端 + 集群限流/">
+
+
+
+
+
+  <title>Sentinel + Zookeeper动态数据源 + Springboot客户端 + 集群限流 | 个人博客</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?d05b0991ea544c8d9c4cb7a57ff5fc4d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-technology">
+          <a href="/technology/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-file-text"></i> <br>
+            
+            技术关注
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br>
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://duia.github.io/2019/05/16/Sentinel + Zookeeper动态数据源 + Springboot客户端 + 集群限流/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="W鹏程">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/pengcheng.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Sentinel + Zookeeper动态数据源 + Springboot客户端 + 集群限流</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-16T19:45:00+08:00">
+                2019-05-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA/spring-boot/" itemprop="url" rel="index">
+                    <span itemprop="name">spring boot</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="https://user-images.githubusercontent.com/9434884/43697219-3cb4ef3a-9975-11e8-9a9c-73f4f537442d.png" alt="Sentinel Logo"></p>
+<h1 id="Sentinel-分布式系统的流量防卫兵"><a href="#Sentinel-分布式系统的流量防卫兵" class="headerlink" title="Sentinel: 分布式系统的流量防卫兵"></a>Sentinel: 分布式系统的流量防卫兵</h1><h2 id="Sentinel-是什么？"><a href="#Sentinel-是什么？" class="headerlink" title="Sentinel 是什么？"></a>Sentinel 是什么？</h2><p>随着微服务的流行，服务和服务之间的稳定性变得越来越重要。Sentinel 以流量为切入点，从流量控制、熔断降级、系统负载保护等多个维度保护服务的稳定性。</p>
+<p>快速上手可以参照官网给出的<a href="https://github.com/alibaba/Sentinel/wiki/%E6%96%B0%E6%89%8B%E6%8C%87%E5%8D%97" target="_blank" rel="noopener">新手指南</a>进行尝试了解。</p>
+<p><a href="https://github.com/alibaba/Sentinel/wiki/%E4%B8%BB%E9%A1%B5" target="_blank" rel="noopener">详细介绍</a></p>
+<p>本文主要对实际开发中遇到的问题，以及官网推荐的使用方式进行整合的过程遇到的问题进行整理。</p>
+<h2 id="Sentinel-Zookeeper动态数据源-Springboot客户端-集群限流"><a href="#Sentinel-Zookeeper动态数据源-Springboot客户端-集群限流" class="headerlink" title="Sentinel + Zookeeper动态数据源 + Springboot客户端 + 集群限流"></a>Sentinel + Zookeeper动态数据源 + Springboot客户端 + 集群限流</h2><p>控制台可以使用官方给提供的jar，springboot项目最快的集成过程可以参考<a href="https://github.com/spring-cloud-incubator/spring-cloud-alibaba/wiki/Sentinel" target="_blank" rel="noopener">Spring Cloud Alibaba Sentinel</a>，也可以看我如下整理的代码进行快速集成使用。</p>
+<h3 id="控制台"><a href="#控制台" class="headerlink" title="控制台"></a>控制台</h3><p>下载官方提供的Sentinel 控制台jar，参考<a href="https://github.com/alibaba/Sentinel/wiki/%E6%8E%A7%E5%88%B6%E5%8F%B0" target="_blank" rel="noopener">Sentinel 控制台</a>进行启动，其实就是普通的springboot项目，可以指定自己的启动参数，自行启动，不再赘诉。</p>
+<p>首次启动登陆，左边的菜单和右边的内容为空，别急，因为我们还没有接入客户端。</p>
+<h3 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h3><p>在要接入Sentinel的springboot项目的pom.xml添加如下代码，放到适合的位置。<code>spring-cloud-starter-alibaba-sentinel</code>包含了所有官网提供能的关于sentinel的组件。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">spring-cloud.version</span>&gt;</span>Finchley.RELEASE<span class="tag">&lt;/<span class="name">spring-cloud.version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-starter-alibaba-sentinel<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.csp<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>sentinel-datasource-zookeeper<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencyManagement</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-dependencies<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;spring-cloud.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">type</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">scope</span>&gt;</span>import<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.cloud<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-cloud-alibaba-dependencies<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">			<span class="comment">&lt;!-- springboot 1.x 用0.1.2.RELEASE  springboot 2.x 用0.2.2.RELEASE--&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">version</span>&gt;</span>0.2.2.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">type</span>&gt;</span>pom<span class="tag">&lt;/<span class="name">type</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">scope</span>&gt;</span>import<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencyManagement</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>application.properties中添加一句：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spring.cloud.sentinel.transport.dashboard=localhost:8080</span><br></pre></td></tr></table></figure></p>
+<p>集成完成。</p>
+<p>启动我们项目进行访问。返回Sentinel 控制台即可看到如下界面。</p>
+<p><img src="https://github.com/alibaba/Sentinel/wiki/image/resourceTree.png" alt="簇点链路"></p>
+<p>每个url都是我们刚才访问过的路径，对于Sentinel称之为资源，即我们可以对该资源进行限流等的操作。</p>
+<h3 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h3><p>Sentinel定义资源分为5种，具体可以查看<a href="https://github.com/alibaba/Sentinel/wiki/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8#%E5%AE%9A%E4%B9%89%E8%B5%84%E6%BA%90" target="_blank" rel="noopener">定义资源</a>，我们可以根据业务的需要进行资源的选择。</p>
+<h3 id="规则"><a href="#规则" class="headerlink" title="规则"></a>规则</h3><p>Sentinel<a href="https://github.com/alibaba/Sentinel/wiki/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8#%E8%A7%84%E5%88%99%E7%9A%84%E7%A7%8D%E7%B1%BB" target="_blank" rel="noopener">规则的种类</a>如下图，有5种规则供我们使用。</p>
+<p><img src="https://user-images.githubusercontent.com/9434884/48189045-2ae58400-e37a-11e8-84aa-2e2c0dd042e2.png" alt="规则管理"></p>
+<p>以上是最基本的配置，如果不做任何修改，Dashboard的推送规则方式是通过 API 将规则推送至客户端并直接更新到内存中：</p>
+<p><img src="https://camo.githubusercontent.com/96b07d598c9eee5a513801cecc68f266fbe58d14/68747470733a2f2f63646e2e6e6c61726b2e636f6d2f6c61726b2f302f323031382f706e672f34373638382f313533363636303239363237332d34663434306262612d356239652d343230352d393430322d6662363038336236363931322e706e67" alt></p>
+<p>此模式为原始模式，<strong>缺点</strong>是每次重启客户端后所有的规则将丢失。Sentinel还提供了Pull 模式、Push 模式。详细可参考<a href="https://github.com/alibaba/Sentinel/wiki/%E5%9C%A8%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E4%B8%AD%E4%BD%BF%E7%94%A8-Sentinel" target="_blank" rel="noopener">在生产环境中使用 Sentinel</a>。</p>
+<p>官方给的建议：<strong>生产环境下一般采用 push 模式的数据源</strong>。要使用<a href="https://github.com/alibaba/Sentinel/wiki/%E5%9C%A8%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E4%B8%AD%E4%BD%BF%E7%94%A8-Sentinel#Push%E6%A8%A1%E5%BC%8F" target="_blank" rel="noopener">push 模式</a>就需要对官方给提供的控制台进行改造，以及对客户端进行相应的配置。</p>
+<p><img src="https://user-images.githubusercontent.com/9434884/45406233-645e8380-b698-11e8-8199-0c917403238f.png" alt></p>
+<h2 id="控制台改造"><a href="#控制台改造" class="headerlink" title="控制台改造"></a>控制台改造</h2><p>官方给的说明有点混乱，整合过程中遇了不少问题，所幸是一步步走出来了。以下就将整理过程整理出来。</p>
+<p><a href="https://github.com/alibaba/Sentinel" target="_blank" rel="noopener">Sentinel源码</a>，要改造控制台，源码是必不可少的，下载源码。其实要改造的就是加入Zookeeper动态数据源，源码中已经有了代码，可以拿来直接使用（也提供了apollo、nacos数据源的支持），位置在<code>sentinel-dashboard/src/test/java/com/alibaba/csp/sentinel/dashboard/rule</code>下，将<code>zookeeper</code>包从test拖到main包下，修改<code>FlowControllerV2.java</code>：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="meta">@Qualifier</span>(<span class="string">"flowRuleZookeeperProvider"</span>)</span><br><span class="line"><span class="keyword">private</span> DynamicRuleProvider&lt;List&lt;FlowRuleEntity&gt;&gt; ruleProvider;</span><br><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="meta">@Qualifier</span>(<span class="string">"flowRuleZookeeperPublisher"</span>)</span><br><span class="line"><span class="keyword">private</span> DynamicRulePublisher&lt;List&lt;FlowRuleEntity&gt;&gt; rulePublisher;</span><br></pre></td></tr></table></figure></p>
+<p>这部分是<code>sentinel-dashboard</code>隐藏的代码及功能，应该是处于开发阶段，估计后期会有更好的集成方式。</p>
+<p>启动sentinel-dashboard项目，点击菜单<strong>流控规则</strong>，可以看到访问路径如：<code>&lt;localhost:port&gt;/#/dashboard/flow/xxxxx</code>，需要手动添加“v2”为<code>&lt;localhost:port&gt;/#/dashboard/v2/flow/xxxxx</code>，一个隐藏的界面，此处添加的流控规则会被保存到我们配置好的zookeeper中。</p>
+<p>或者找到<code>sidebar.html</code>将如下代码放开：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">li</span> <span class="attr">ui-sref-active</span>=<span class="string">"active"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">a</span> <span class="attr">ui-sref</span>=<span class="string">"dashboard.flow(&#123;app: entry.app&#125;)"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">i</span> <span class="attr">class</span>=<span class="string">"glyphicon glyphicon-filter"</span>&gt;</span><span class="tag">&lt;/<span class="name">i</span>&gt;</span>  流控规则 V2<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>控制台会多一菜单。</p>
+<h2 id="客户端配置"><a href="#客户端配置" class="headerlink" title="客户端配置"></a>客户端配置</h2><p>客户端集成相对容易一点，<code>application.properties</code>中添加如下代码即可：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">spring.cloud.sentinel.datasource.ds3.zk.server-addr=localhost:2181</span><br><span class="line">spring.cloud.sentinel.datasource.ds3.zk.group-id=SENTINEL_GROUP</span><br><span class="line">spring.cloud.sentinel.datasource.ds3.zk.data-id=xxxxxx</span><br><span class="line">spring.cloud.sentinel.datasource.ds3.zk.rule-type=flow</span><br><span class="line">spring.cloud.sentinel.datasource.ds3.zk.data-type=json</span><br></pre></td></tr></table></figure></p>
+<p>官方给的例子点<a href="https://github.com/spring-cloud-incubator/spring-cloud-alibaba/blob/master/spring-cloud-alibaba-examples/sentinel-example/sentinel-core-example/readme-zh.md" target="_blank" rel="noopener">Sentinel Example</a>。</p>
+<p>在整合过程中废了点时间，因为官方给的说明有点混乱，是给控制台的代码还是给客户端的代码没有明确的说明，还有如上代码中的group-id、data-id等也没有明确的说明，一不注意配置不对，流控规则就不会生效。</p>
+<p><code>InitFunc</code>接口，可以用作<a href="https://github.com/alibaba/Sentinel/wiki/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%99%E6%89%A9%E5%B1%95#%E6%B3%A8%E5%86%8C%E6%95%B0%E6%8D%AE%E6%BA%90" target="_blank" rel="noopener">注册数据源</a>，在尝试过程中发现这段代码配置到客户端是起作用的，即相当于上边客户端集成的在<code>application.properties</code>中添加的那段代码作用一样。具体代码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ReadableDataSource&lt;String, List&lt;FlowRule&gt;&gt; ruleSource = <span class="keyword">new</span> ZookeeperDataSource&lt;&gt;(remoteAddress, groupId,</span><br><span class="line">	flowDataId, source -&gt; JSON.parseObject(source, <span class="keyword">new</span> TypeReference&lt;List&lt;FlowRule&gt;&gt;() &#123;&#125;));</span><br><span class="line">FlowRuleManager.register2Property(ruleSource.getProperty());</span><br></pre></td></tr></table></figure></p>
+<p>其中groupId、flowDataId注意，需要与控制台改造中设计到的zookeeper的path一致，否则规则不生效。</p>
+<p><a href="https://github.com/alibaba/Sentinel/wiki/%E9%9B%86%E7%BE%A4%E6%B5%81%E6%8E%A7" target="_blank" rel="noopener">集群流控</a>，控制台已经集成了该功能，我们拿来可以直接用，省去了调用API的麻烦，但该功能是需要客户端的支持。</p>
+<p>Sentinel 集群限流服务端有两种启动方式：独立模式（Alone）；嵌入模式（Embedded）。调试集群限流看代码的过程中发现了<a href="https://github.com/alibaba/Sentinel/tree/master/sentinel-demo/sentinel-demo-cluster/sentinel-demo-cluster-embedded" target="_blank" rel="noopener">嵌入模式Demo</a>，此处是给springboot客户端集成的demo示例，将entity包、init包、DemoConstants类、META-INF文件夹及它们里边的类和文件，复制到咱们的springboot项目对应位置，自行配置集群，通过jmeter压测接口，会发现集群限流起作用了。</p>
+<h2 id="错误"><a href="#错误" class="headerlink" title="错误"></a>错误</h2><p>1、在控制台的日志里面显示setRules:success，但设置限流规则为什么不显示（不起作用）</p>
+<pre><code>查看fastjson 版本，移除我们引入的jar，使用sentinel中的版本。
+</code></pre><p>2、convert error：客户端报错有这样的关键字，可以在Sentinel控制台的源码中找到<code>FlowRuleEntity.java</code>，将以下属性添加注解<code>@JSONField(serialize = false)</code>：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@JSONField</span>(serialize = <span class="keyword">false</span>)</span><br><span class="line"><span class="keyword">private</span> Long id;</span><br><span class="line"><span class="meta">@JSONField</span>(serialize = <span class="keyword">false</span>)</span><br><span class="line"><span class="keyword">private</span> String app;</span><br><span class="line"><span class="meta">@JSONField</span>(serialize = <span class="keyword">false</span>)</span><br><span class="line"><span class="keyword">private</span> String ip;</span><br><span class="line"><span class="meta">@JSONField</span>(serialize = <span class="keyword">false</span>)</span><br><span class="line"><span class="keyword">private</span> Integer port;</span><br><span class="line"></span><br><span class="line"><span class="meta">@JSONField</span>(serialize = <span class="keyword">false</span>)</span><br><span class="line"><span class="keyword">private</span> Date gmtCreate;</span><br><span class="line"><span class="meta">@JSONField</span>(serialize = <span class="keyword">false</span>)</span><br><span class="line"><span class="keyword">private</span> Date gmtModified;</span><br></pre></td></tr></table></figure></p>
+<p>3、集群限流不准确，项目添加以下启动参数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-Dcsp.sentinel.log.use.pid=true</span><br></pre></td></tr></table></figure></p>
+<h2 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h2><p>Sentinel官方源码中其实已经包含了所有需要到的代码，就是没有比较系统直白的使用demo，可能也是还在开发阶段吧，期待官方的完善。</p>
+<p>个人感觉目前源码中缺失的功能，亦或是我没有发现的功能，除了集群限流规则能做到持久化数据库，其它规则没有提供，包括集群应用的配置信息也没有持久化。所幸的是如果不配置客户端集群功能，即人为设置token server失败，如果Token Server不可用，各应用自动退化到单机限流。</p>
+<p>官方提供了各种接口供我们使用，可以根据自己的需要，自行设置。还有更多功能等待挖掘，有什么更好的使用方式可以联系我，一起研究。</p>
+<p>相关链接：<br><a href="https://github.com/alibaba/Sentinel" target="_blank" rel="noopener">Sentinel源码</a></p>
+<p><a href="https://github.com/spring-cloud-incubator/spring-cloud-alibaba" target="_blank" rel="noopener">Sentinel 与 Spring Boot / Spring Cloud 的整合</a></p>
+<p><a href="https://github.com/all4you/sentinel-tutorial" target="_blank" rel="noopener">Sentinel 教程，包括原理分析，源码阅读，实战分享</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Sentinel/" rel="tag"># Sentinel</a>
+          
+            <a href="/tags/限流/" rel="tag"># 限流</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/21/Nginx Linux详细安装部署教程及配置SSL/" rel="next" title="Nginx Linux详细安装部署教程及配置SSL">
+                <i class="fa fa-chevron-left"></i> Nginx Linux详细安装部署教程及配置SSL
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/pengcheng.jpg" alt="W鹏程">
+            
+              <p class="site-author-name" itemprop="name">W鹏程</p>
+              <p class="site-description motion-element" itemprop="description">宁在地狱为王，不愿天堂为仆</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/duia" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="duia.online@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Sentinel-分布式系统的流量防卫兵"><span class="nav-number">1.</span> <span class="nav-text">Sentinel: 分布式系统的流量防卫兵</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Sentinel-是什么？"><span class="nav-number">1.1.</span> <span class="nav-text">Sentinel 是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Sentinel-Zookeeper动态数据源-Springboot客户端-集群限流"><span class="nav-number">1.2.</span> <span class="nav-text">Sentinel + Zookeeper动态数据源 + Springboot客户端 + 集群限流</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#控制台"><span class="nav-number">1.2.1.</span> <span class="nav-text">控制台</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端"><span class="nav-number">1.2.2.</span> <span class="nav-text">客户端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#资源"><span class="nav-number">1.2.3.</span> <span class="nav-text">资源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#规则"><span class="nav-number">1.2.4.</span> <span class="nav-text">规则</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#控制台改造"><span class="nav-number">1.3.</span> <span class="nav-text">控制台改造</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#客户端配置"><span class="nav-number">1.4.</span> <span class="nav-text">客户端配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#错误"><span class="nav-number">1.5.</span> <span class="nav-text">错误</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结："><span class="nav-number">1.6.</span> <span class="nav-text">总结：</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">W鹏程</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

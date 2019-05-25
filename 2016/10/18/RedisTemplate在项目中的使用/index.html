@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="java,API,redis,spring,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="个人博客" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="API是好东西，开篇先放上两API，以下会用得着，学会多看API。 Spring Data Redis 1.7.4.RELEASE API redis中文文档 接着上篇文章， spring+mybatis+redis，在实际的开发中，需要人工的去对redis缓冲进行增删改查（原因文章最后讨论，重点），于是使用到了Spring Data Redis的RedisTemplate，在初次使用过程中总结了">
+<meta name="keywords" content="java,API,redis,spring">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RedisTemplate在项目中的使用">
+<meta property="og:url" content="https://duia.github.io/2016/10/18/RedisTemplate在项目中的使用/index.html">
+<meta property="og:site_name" content="个人博客">
+<meta property="og:description" content="API是好东西，开篇先放上两API，以下会用得着，学会多看API。 Spring Data Redis 1.7.4.RELEASE API redis中文文档 接着上篇文章， spring+mybatis+redis，在实际的开发中，需要人工的去对redis缓冲进行增删改查（原因文章最后讨论，重点），于是使用到了Spring Data Redis的RedisTemplate，在初次使用过程中总结了">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-04-25T08:00:00.007Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RedisTemplate在项目中的使用">
+<meta name="twitter:description" content="API是好东西，开篇先放上两API，以下会用得着，学会多看API。 Spring Data Redis 1.7.4.RELEASE API redis中文文档 接着上篇文章， spring+mybatis+redis，在实际的开发中，需要人工的去对redis缓冲进行增删改查（原因文章最后讨论，重点），于是使用到了Spring Data Redis的RedisTemplate，在初次使用过程中总结了">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://duia.github.io/2016/10/18/RedisTemplate在项目中的使用/">
+
+
+
+
+
+  <title>RedisTemplate在项目中的使用 | 个人博客</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?d05b0991ea544c8d9c4cb7a57ff5fc4d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-technology">
+          <a href="/technology/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-file-text"></i> <br>
+            
+            技术关注
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br>
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://duia.github.io/2016/10/18/RedisTemplate在项目中的使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="W鹏程">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/pengcheng.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">RedisTemplate在项目中的使用</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-10-18T22:02:00+08:00">
+                2016-10-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA/spring/" itemprop="url" rel="index">
+                    <span itemprop="name">spring</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>API是好东西，开篇先放上两API，以下会用得着，学会多看API。</p>
+<p><a href="http://docs.spring.io/spring-data/redis/docs/current/api/" target="_blank" rel="noopener">Spring Data Redis 1.7.4.RELEASE API</a></p>
+<p><a href="http://redisdoc.com/index.html" target="_blank" rel="noopener">redis中文文档</a></p>
+<p>接着上篇文章， <a href="/post/springmvc-mybatis-redis.html">spring+mybatis+redis</a>，在实际的开发中，需要人工的去对redis缓冲进行增删改查（原因文章最后讨论，重点），于是使用到了Spring Data Redis的RedisTemplate，在初次使用过程中总结了一些学习使用的过程，并做了部分归纳，具体如下。</p>
+<p>使用过redisTemplate的童鞋可以直接跳到<strong>实际开发中的使用情况</strong>部分，有更重要的内容需要讨论。</p>
+<h2 id="注入redisTemplate"><a href="#注入redisTemplate" class="headerlink" title="注入redisTemplate"></a>注入redisTemplate</h2><p>在spring-redis.xml添加如下代码：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"redisTemplate"</span> <span class="attr">class</span>=<span class="string">"org.springframework.data.redis.core.RedisTemplate"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"connectionFactory"</span> <span class="attr">ref</span>=<span class="string">"jedisConnectionFactory"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"keySerializer"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">"org.springframework.data.redis.serializer.StringRedisSerializer"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span>	</span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"valueSerializer"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">"org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"hashKeySerializer"</span>&gt;</span>  </span><br><span class="line">        <span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">"org.springframework.data.redis.serializer.StringRedisSerializer"</span>/&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"hashValueSerializer"</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">"org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"</span>/&gt;</span>  </span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>这样便可在控制层或业务逻辑层代码中获取并使用redisTemplate。</p>
+<h2 id="JAVA集合和Redis集合"><a href="#JAVA集合和Redis集合" class="headerlink" title="JAVA集合和Redis集合"></a>JAVA集合和Redis集合</h2><p>不要试图使用泛型Java集合，例如<code>RedisTemplate&lt;Key,Collection&lt;?&gt;&gt;</code>，这种用法等价于在jvm把Collection&lt;?&gt;序列化成字节数组，以value的形式保存到redis中，很显然，这种方法非常低效，不仅存在大量的序列化反序列化操作，并且每次操作集合都要首先获取一个完整的集合（包含所有的元素）。这是很容易理解的，举个例子，如果你想将一个集合保存在redis缓冲中，如果将集合序列化后转换成一大段字符串，并以key-value的形式保存就会犯了上边说的错误，而redis有保存这个结构数据的数据类型了，我们可以根据具体需求将其保存成List、Set、ZSet数据格式。redis提供的5中数据类型，Value，List，Set，ZSet（Sorted Set）和Map，具体详细大家可以自行学习一下。</p>
+<h2 id="RedisTemplate的主要方法"><a href="#RedisTemplate的主要方法" class="headerlink" title="RedisTemplate的主要方法"></a>RedisTemplate的主要方法</h2><blockquote>
+<p>RedisTemplate&lt;K, V&gt; implements RedisOperations&lt;K, V&gt;</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Modifier and Type</th>
+<th>Method and Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt;HK,HV&gt; BoundHashOperations&lt;K,HK,HV&gt;</td>
+<td>boundHashOps(K key)  返回绑定了key的Hash类型操作执行类。</td>
+</tr>
+<tr>
+<td>BoundListOperations&lt;K,V&gt;</td>
+<td>boundListOps(K key) 返回绑定了key的List类型操作执行类。</td>
+</tr>
+<tr>
+<td>BoundSetOperations&lt;K,V&gt;</td>
+<td>boundSetOps(K key) 返回绑定了key的Set类型操作执行类。</td>
+</tr>
+<tr>
+<td>BoundValueOperations&lt;K,V&gt;</td>
+<td>boundValueOps(K key)  返回绑定了key的简单（String）类型操作执行类。</td>
+</tr>
+<tr>
+<td>BoundZSetOperations&lt;K,V&gt;</td>
+<td>boundZSetOps(K key) 返回绑定了key的有序Set类型操作执行类。</td>
+</tr>
+<tr>
+<td>&lt;HK,HV&gt; HashOperations&lt;K,HK,HV&gt;</td>
+<td>opsForHash() 返回Hash类型操作执行类。</td>
+</tr>
+<tr>
+<td>ListOperations&lt;K,V&gt;</td>
+<td>opsForList() 返回List类型操作执行类。</td>
+</tr>
+<tr>
+<td>SetOperations&lt;K,V&gt;</td>
+<td>opsForSet() 返回Set类型操作执行类。</td>
+</tr>
+<tr>
+<td>ValueOperations&lt;K,V&gt;</td>
+<td>opsForValue() 返回简单（String）类型操作执行类。</td>
+</tr>
+<tr>
+<td>ZSetOperations&lt;K,V&gt;</td>
+<td>opsForZSet() 返回有序Set类型操作执行类。</td>
+</tr>
+</tbody>
+</table>
+<p>Bound开头的方法获取了一个指定操作对象（key）的operator，在一个连接（事务）内只能操作这个key对应的value。<br>没有Bound开头的方法是获取一个operator，但是没有指定操作的对象（key），可以在一个连接（事务）内操作多个key以及对应的value。该部分是对redis操作的高度封装，利用该该方法返回的对象便可完成大部分的操作。</p>
+<table>
+<thead>
+<tr>
+<th>Modifier and Type</th>
+<th>Method and Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><t> T</t></td>
+<td>execute(RedisCallback<t> action) 操作Redis中的 connection.</t></td>
+</tr>
+</tbody>
+</table>
+<p>以上的方法是redisTemplate中执行操作的底层方法，任何基于redisTemplate之上的调用(比如，valueOperations)最终都会被封装成RedisCallback，redisTemplate在execute方法中将会直接使用jedis客户端API进行与server通信，而且在如果使用了连接池，则会在操作之后执行returnSource。</p>
+<p>其他常用操作</p>
+<table>
+<thead>
+<tr>
+<th>Modifier and Type</th>
+<th>Method and Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>void</td>
+<td>delete(K key) 根据key删除缓冲</td>
+</tr>
+<tr>
+<td>Boolean</td>
+<td>hasKey(K key) 判断key是否存在</td>
+</tr>
+<tr>
+<td>Set<k></k></td>
+<td>keys(K pattern) 根据pattren匹配key</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Redis中5种数据类型的操作API"><a href="#Redis中5种数据类型的操作API" class="headerlink" title="Redis中5种数据类型的操作API"></a>Redis中5种数据类型的操作API</h2><h3 id="ValueOperations"><a href="#ValueOperations" class="headerlink" title="ValueOperations"></a>ValueOperations</h3><p>该数据类型可以理解为java中的<code>Map&lt;Object, Object&gt;</code></p>
+<table>
+<thead>
+<tr>
+<th>Modifier and Type</th>
+<th>Method and Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Integer</td>
+<td>append(K key, String value) 在key的value后追加，没有该key是新增</td>
+</tr>
+<tr>
+<td>String</td>
+<td>get(K key, long start, long end) </td>
+</tr>
+<tr>
+<td>V</td>
+<td>get(Object key) 根据key获取value</td>
+</tr>
+<tr>
+<td>V</td>
+<td>getAndSet(K key, V value) </td>
+</tr>
+<tr>
+<td>List<v></v></td>
+<td>multiGet(Collection<k> keys) </k></td>
+</tr>
+<tr>
+<td>void</td>
+<td>multiSet(Map&lt;? extends K,? extends V&gt; m) </td>
+</tr>
+<tr>
+<td>void</td>
+<td>set(K key, V value) 新增</td>
+</tr>
+<tr>
+<td>void</td>
+<td>set(K key, V value, long offset) </td>
+</tr>
+<tr>
+<td>void</td>
+<td>set(K key, V value, long timeout, TimeUnit unit) Set key to hold the string value until timeout.</td>
+</tr>
+<tr>
+<td>Long</td>
+<td>size(K key) </td>
+</tr>
+</tbody>
+</table>
+<h3 id="ListOperations-lt-K-V-gt"><a href="#ListOperations-lt-K-V-gt" class="headerlink" title="ListOperations&lt;K,V&gt;"></a>ListOperations&lt;K,V&gt;</h3><p>该数据类型可以看作是<code>Map&lt;Object, List&lt;Objeck&gt;&gt;</code>，该数据通过key获取到的是一个集合</p>
+<table>
+<thead>
+<tr>
+<th>Modifier and Type</th>
+<th>Method and Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>V</td>
+<td>index(K key, long index) </td>
+</tr>
+<tr>
+<td>V</td>
+<td>leftPop(K key) 获取key表示的集合的第一个值，同时会将第一值删除</td>
+</tr>
+<tr>
+<td>V</td>
+<td>leftPop(K key, long timeout, TimeUnit unit) </td>
+</tr>
+<tr>
+<td>Long</td>
+<td>leftPush(K key, V value) 在key表示的集合最前边添加value</td>
+</tr>
+<tr>
+<td>Long</td>
+<td>leftPush(K key, V pivot, V value) </td>
+</tr>
+<tr>
+<td>Long</td>
+<td>leftPushAll(K key, Collection<v> values)  在key表示的集合前边添加一个集合</v></td>
+</tr>
+<tr>
+<td>Long</td>
+<td>leftPushAll(K key, V… values) 同上</td>
+</tr>
+<tr>
+<td>Long</td>
+<td>rightPush(K key, V value) 参考leftPush</td>
+</tr>
+<tr>
+<td>Long</td>
+<td>rightPushAll(K key, Collection<v> values) 参考leftPushAll</v></td>
+</tr>
+<tr>
+<td>Long</td>
+<td>rightPushAll(K key, V… values) 同上</td>
+</tr>
+</tbody>
+</table>
+<h3 id="SetOperations-lt-K-V-gt"><a href="#SetOperations-lt-K-V-gt" class="headerlink" title="SetOperations&lt;K,V&gt;"></a>SetOperations&lt;K,V&gt;</h3><table>
+<thead>
+<tr>
+<th>Modifier and Type</th>
+<th>Method and Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Long</td>
+<td>add(K key, V… values) 添加一个或多个value到key集合中</td>
+</tr>
+<tr>
+<td>Set<v></v></td>
+<td>difference(K key, Collection<k> otherKeys) 差集，key代表的集合中在otherKeys代表全部集合中都没有的元素</k></td>
+</tr>
+<tr>
+<td>Set<v></v></td>
+<td>difference(K key, K otherKey) 差集，key代表的集合中在otherKey代表集合中没有的元素</td>
+</tr>
+<tr>
+<td>Set<v></v></td>
+<td>intersect(K key, Collection<k> otherKeys)</k></td>
+</tr>
+<tr>
+<td>Set<v></v></td>
+<td>intersect(K key, K otherKey) 交集，key代表集合的交集</td>
+</tr>
+<tr>
+<td>Boolean</td>
+<td>isMember(K key, Object o) 判断o是否是key代表集合中的元素</td>
+</tr>
+<tr>
+<td>Set<v></v></td>
+<td>members(K key) 返回key集合中的成员</td>
+</tr>
+<tr>
+<td>Set<v></v></td>
+<td>union(K key, Collection<k> otherKeys) </k></td>
+</tr>
+<tr>
+<td>Set<v></v></td>
+<td>union(K key, K otherKey) 并集，所有key代表集合的并集</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ZSetOperations-lt-K-V-gt"><a href="#ZSetOperations-lt-K-V-gt" class="headerlink" title="ZSetOperations&lt;K,V&gt;"></a>ZSetOperations&lt;K,V&gt;</h3><table>
+<thead>
+<tr>
+<th>Modifier and Type</th>
+<th>Method and Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Boolean</td>
+<td>add(K key, V value, double score) 在key表示的set集合中添加value，score用于排序</td>
+</tr>
+<tr>
+<td>Long</td>
+<td>count(K key, double min, double max) </td>
+</tr>
+<tr>
+<td>Set<v></v></td>
+<td>range(K key, long start, long end) 获取key表示的set集合，start起始位置，end结束位置，获取全部分别赋值为0, -1</td>
+</tr>
+<tr>
+<td>Set<v></v></td>
+<td>rangeByScore(K key, double min, double max) 获取key表示的集合中score在min和max之间数据的set集合，包含min和max，获取全部可分别赋值为Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY</td>
+</tr>
+</tbody>
+</table>
+<h3 id="HashOperations-lt-K-V-gt"><a href="#HashOperations-lt-K-V-gt" class="headerlink" title="HashOperations&lt;K,V&gt;"></a>HashOperations&lt;K,V&gt;</h3><p>类似于java中的<code>Map&lt;String, Map&lt;String, Object&gt;&gt;</code></p>
+<table>
+<thead>
+<tr>
+<th>Modifier and Type</th>
+<th>Method and Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Long</td>
+<td>delete(H key, Object… hashKeys) 删除key、hashKeys值</td>
+</tr>
+<tr>
+<td>Map&lt;HK,HV&gt;</td>
+<td>entries(H key) 获取key代表的map集合</td>
+</tr>
+<tr>
+<td>HV</td>
+<td>get(H key, Object hashKey) 从key代表的map中获取hashKey的值</td>
+</tr>
+<tr>
+<td>Boolean</td>
+<td>hasKey(H key, Object hashKey) 判断key的map中hashKey是否存在</td>
+</tr>
+<tr>
+<td>Set<hk></hk></td>
+<td>keys(H key) 获取key代表map集合的键集合</td>
+</tr>
+<tr>
+<td>List<hv></hv></td>
+<td>multiGet(H key, Collection<hk> hashKeys) 获取key的map中hashKeys对应的值集合</hk></td>
+</tr>
+<tr>
+<td>void</td>
+<td>put(H key, HK hashKey, HV value) 在key的map中保存hashKey-value</td>
+</tr>
+<tr>
+<td>void</td>
+<td>putAll(H key, Map&lt;? extends HK,? extends HV&gt; m) </td>
+</tr>
+<tr>
+<td>List<hv></hv></td>
+<td>values(H key) 获取key的map集合中值的集合</td>
+</tr>
+</tbody>
+</table>
+<h2 id="API的使用"><a href="#API的使用" class="headerlink" title="API的使用"></a>API的使用</h2><p>如果大家看了<a href="http://docs.spring.io/spring-data/redis/docs/current/api/" target="_blank" rel="noopener">Spring Data Redis 1.7.4.RELEASE API</a>，相信大家一定和我一样有困惑，除了全是英文，大部分方法是没有任何说明的，简单说说我的方法，和大家分享一下，大家有什么好方法也可以共享一下。首先先感谢一下<a href="http://redisdoc.com/index.html" target="_blank" rel="noopener">redis中文文档</a>团队，这个API写的好。</p>
+<p>下载Spring Data Redis 1.7.4.RELEASE的源码后，可以进行方法跟踪，以上的所有方法进行一步一步往低层走后，全会出现类似以下的代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> execute(<span class="keyword">new</span> RedisCallback&lt;...&gt;() &#123;</span><br><span class="line">	<span class="keyword">public</span> ... doInRedis(RedisConnection connection) &#123;</span><br><span class="line">		<span class="keyword">return</span> connection....</span><br><span class="line">	&#125;</span><br><span class="line">&#125;, <span class="keyword">true</span>);</span><br></pre></td></tr></table></figure></p>
+<p>connection所调用的方法全部可以在<a href="http://redisdoc.com/index.html" target="_blank" rel="noopener">redis中文文档</a>中找到，包括参数，大家就很容易理解Spring Data Redis 1.7.4.RELEASE中方法的用途了。</p>
+<h2 id="实际开发中的使用情况"><a href="#实际开发中的使用情况" class="headerlink" title="实际开发中的使用情况"></a>实际开发中的使用情况</h2><p>先说一下我最直接的感受：使用redisTemplate真是一个出力不讨好的选择。完全代表个人感受，大家可以谈谈你们的看法。</p>
+<p>当第一次接到这个要求，要求项目中要使用redisTemplate人工控制缓冲的，一直在思考一个问题，也问过领导同事，“出于一个什么样的目的要这样去控制缓冲”，在我再三询问下竟然有同事给出了“就是想用，没理由”的理由，领导给的答案是“如果直接使用自动mybatis+redis的缓冲方式，没有指定的添加修改缓冲，缓冲会放的太多，占用空间”。</p>
+<p>在接下来的工作中开始了添加缓冲功能，遇到了以下应该思考的问题：</p>
+<ul>
+<li>哪里该添加缓冲</li>
+<li>什么时候需要删除或修改缓冲</li>
+<li>redis缓冲key值的规则制定，以确保缓冲的灵活性</li>
+<li>缓冲数据的保存形式该选什么</li>
+<li>本以写好的代码不得不加入新的逻辑业务功能模块</li>
+<li>甚至有些多表关联的数据为了存取修改缓冲的方便不得不再拆成单表进行多次查询的方式</li>
+<li>…</li>
+</ul>
+<p>以上就是我在实际开发中遇到的问题，带来的开发负担是小，主要是影响到了原先已经测试通过的代码功能，也曾想着有什么更好的方式方法来解决这样的问题，所以在总结了以上内容也提出了自己的疑问，希望有遇到过类似问题的前辈们指点一二。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/API/" rel="tag"># API</a>
+          
+            <a href="/tags/redis/" rel="tag"># redis</a>
+          
+            <a href="/tags/spring/" rel="tag"># spring</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/09/springmvc+mybatis+redis/" rel="next" title="springmvc+mybatis+redis">
+                <i class="fa fa-chevron-left"></i> springmvc+mybatis+redis
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/22/java设计模式之单例模式/" rel="prev" title="java设计模式之单例模式">
+                java设计模式之单例模式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/pengcheng.jpg" alt="W鹏程">
+            
+              <p class="site-author-name" itemprop="name">W鹏程</p>
+              <p class="site-description motion-element" itemprop="description">宁在地狱为王，不愿天堂为仆</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/duia" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="duia.online@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#注入redisTemplate"><span class="nav-number">1.</span> <span class="nav-text">注入redisTemplate</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JAVA集合和Redis集合"><span class="nav-number">2.</span> <span class="nav-text">JAVA集合和Redis集合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RedisTemplate的主要方法"><span class="nav-number">3.</span> <span class="nav-text">RedisTemplate的主要方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis中5种数据类型的操作API"><span class="nav-number">4.</span> <span class="nav-text">Redis中5种数据类型的操作API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ValueOperations"><span class="nav-number">4.1.</span> <span class="nav-text">ValueOperations</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ListOperations-lt-K-V-gt"><span class="nav-number">4.2.</span> <span class="nav-text">ListOperations&lt;K,V&gt;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SetOperations-lt-K-V-gt"><span class="nav-number">4.3.</span> <span class="nav-text">SetOperations&lt;K,V&gt;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZSetOperations-lt-K-V-gt"><span class="nav-number">4.4.</span> <span class="nav-text">ZSetOperations&lt;K,V&gt;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HashOperations-lt-K-V-gt"><span class="nav-number">4.5.</span> <span class="nav-text">HashOperations&lt;K,V&gt;</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#API的使用"><span class="nav-number">5.</span> <span class="nav-text">API的使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实际开发中的使用情况"><span class="nav-number">6.</span> <span class="nav-text">实际开发中的使用情况</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">W鹏程</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

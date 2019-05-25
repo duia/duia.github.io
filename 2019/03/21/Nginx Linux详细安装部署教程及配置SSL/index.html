@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="nginx,https,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="个人博客" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="一、Nginx简介Nginx是一个web服务器也可以用来做负载均衡及反向代理使用，目前使用最多的就是负载均衡，具体简介我就不介绍了百度一下有很多，下面直接进入安装步骤 二、Nginx安装1、下载Nginx及相关组件Linux系统是Centos 6.5 64位，我直接切换到root用户下安装 进入用户目录下载程序 1[root@localhost /]# cd /usr/local/src/ 下载相">
+<meta name="keywords" content="nginx,https">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nginx Linux详细安装部署教程及配置SSL">
+<meta property="og:url" content="https://duia.github.io/2019/03/21/Nginx Linux详细安装部署教程及配置SSL/index.html">
+<meta property="og:site_name" content="个人博客">
+<meta property="og:description" content="一、Nginx简介Nginx是一个web服务器也可以用来做负载均衡及反向代理使用，目前使用最多的就是负载均衡，具体简介我就不介绍了百度一下有很多，下面直接进入安装步骤 二、Nginx安装1、下载Nginx及相关组件Linux系统是Centos 6.5 64位，我直接切换到root用户下安装 进入用户目录下载程序 1[root@localhost /]# cd /usr/local/src/ 下载相">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://www.duia.online/upload/2019/2/90-46173693220190320183342795.png">
+<meta property="og:updated_time" content="2019-05-23T12:00:00.091Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nginx Linux详细安装部署教程及配置SSL">
+<meta name="twitter:description" content="一、Nginx简介Nginx是一个web服务器也可以用来做负载均衡及反向代理使用，目前使用最多的就是负载均衡，具体简介我就不介绍了百度一下有很多，下面直接进入安装步骤 二、Nginx安装1、下载Nginx及相关组件Linux系统是Centos 6.5 64位，我直接切换到root用户下安装 进入用户目录下载程序 1[root@localhost /]# cd /usr/local/src/ 下载相">
+<meta name="twitter:image" content="https://www.duia.online/upload/2019/2/90-46173693220190320183342795.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://duia.github.io/2019/03/21/Nginx Linux详细安装部署教程及配置SSL/">
+
+
+
+
+
+  <title>Nginx Linux详细安装部署教程及配置SSL | 个人博客</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?d05b0991ea544c8d9c4cb7a57ff5fc4d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-technology">
+          <a href="/technology/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-file-text"></i> <br>
+            
+            技术关注
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br>
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://duia.github.io/2019/03/21/Nginx Linux详细安装部署教程及配置SSL/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="W鹏程">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/pengcheng.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Nginx Linux详细安装部署教程及配置SSL</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-21T11:48:00+08:00">
+                2019-03-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/服务器/" itemprop="url" rel="index">
+                    <span itemprop="name">服务器</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一、Nginx简介"><a href="#一、Nginx简介" class="headerlink" title="一、Nginx简介"></a>一、Nginx简介</h2><p>Nginx是一个web服务器也可以用来做负载均衡及反向代理使用，目前使用最多的就是负载均衡，具体简介我就不介绍了百度一下有很多，下面直接进入安装步骤</p>
+<h2 id="二、Nginx安装"><a href="#二、Nginx安装" class="headerlink" title="二、Nginx安装"></a>二、Nginx安装</h2><h3 id="1、下载Nginx及相关组件"><a href="#1、下载Nginx及相关组件" class="headerlink" title="1、下载Nginx及相关组件"></a>1、下载Nginx及相关组件</h3><p>Linux系统是Centos 6.5 64位，我直接切换到root用户下安装</p>
+<p>进入用户目录下载程序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost /]# cd /usr/local/src/</span><br></pre></td></tr></table></figure>
+<p>下载相关组件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost src]# wget http://nginx.org/download/nginx-1.10.2.tar.gz</span><br><span class="line">省略安装内容...</span><br><span class="line">[root@localhost src]# wget http://www.openssl.org/source/openssl-fips-2.0.10.tar.gz</span><br><span class="line">省略安装内容...</span><br><span class="line">[root@localhost src]# wget http://zlib.net/zlib-1.2.11.tar.gz</span><br><span class="line">省略安装内容...</span><br><span class="line">[root@localhost src]# wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.40.tar.gz</span><br><span class="line">省略安装内容...</span><br></pre></td></tr></table></figure>
+<p>安装c++编译环境，如已安装可略过</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost src]# yum install gcc-c++</span><br><span class="line">省略安装内容...</span><br></pre></td></tr></table></figure>
+<p>期间会有确认提示输入y回车</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Is this ok [y/N]:y</span><br><span class="line">省略安装内容...</span><br></pre></td></tr></table></figure>
+<h3 id="2、安装Nginx及相关组件"><a href="#2、安装Nginx及相关组件" class="headerlink" title="2、安装Nginx及相关组件"></a>2、安装Nginx及相关组件</h3><p>openssl安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost src]# tar zxvf openssl-fips-2.0.10.tar.gz</span><br><span class="line">省略安装内容...</span><br><span class="line">[root@localhost src]# cd openssl-fips-2.0.10</span><br><span class="line">[root@localhost openssl-fips-2.0.10]# ./config &amp;&amp; make &amp;&amp; make install</span><br><span class="line">省略安装内容...</span><br></pre></td></tr></table></figure>
+<p>pcre安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost src]# tar zxvf pcre-8.40.tar.gz</span><br><span class="line">省略安装内容...</span><br><span class="line">[root@localhost src]# cd pcre-8.40</span><br><span class="line">[root@localhost pcre-8.40]# ./configure &amp;&amp; make &amp;&amp; make install</span><br><span class="line">省略安装内容...</span><br></pre></td></tr></table></figure>
+<p>zlib安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost src]# tar zxvf zlib-1.2.11.tar.gz</span><br><span class="line">省略安装内容...</span><br><span class="line">[root@localhost src]# cd zlib-1.2.11</span><br><span class="line">[root@localhost zlib-1.2.11]# ./configure &amp;&amp; make &amp;&amp; make install</span><br><span class="line">省略安装内容...</span><br></pre></td></tr></table></figure>
+<p>nginx安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost src]# tar zxvf nginx-1.10.2.tar.gz</span><br><span class="line">省略安装内容...</span><br><span class="line">[root@localhost src]# cd nginx-1.10.2</span><br><span class="line">[root@localhost nginx-1.10.2]# ./configure &amp;&amp; make &amp;&amp; make install</span><br><span class="line">省略安装内容...</span><br></pre></td></tr></table></figure>
+<h3 id="3、启动Nginx"><a href="#3、启动Nginx" class="headerlink" title="3、启动Nginx"></a>3、启动Nginx</h3><p>先找一下nginx安装到什么位置上了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost src]# whereis nginx</span><br><span class="line">nginx: /usr/local/nginx</span><br></pre></td></tr></table></figure>
+<p>进入nginx目录并启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost src]# cd /usr/local/nginx</span><br><span class="line">[root@localhost nginx]# sbin/nginx</span><br><span class="line">sbin/nginx: error while loading shared libraries: libpcre.so.1: cannot open shared object file: No such file or directory</span><br></pre></td></tr></table></figure>
+<p>报错了，按照下面方式解决</p>
+<ol>
+<li>用whereis libpcre.so.1命令找到libpcre.so.1在哪里</li>
+<li>用ln -s /usr/local/lib/libpcre.so.1 /lib64命令做个软连接就可以了</li>
+<li>用sbin/nginx启动Nginx</li>
+<li>用ps -aux | grep nginx查看状态</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost nginx]# whereis libpcre.so.1</span><br><span class="line">[root@localhost nginx]# ln -s /usr/local/lib/libpcre.so.1 /lib64</span><br><span class="line">[root@localhost nginx]# sbin/nginx</span><br><span class="line">[root@localhost nginx]# ps -aux | grep nginx</span><br></pre></td></tr></table></figure>
+<p>进入Linux系统的图形界面，打开浏览器输入localhost会看到下图，说明nginx启动成功<br><img src="https://www.duia.online/upload/2019/2/90-46173693220190320183342795.png" alt="image"></p>
+<p><strong>nginx的基本操作</strong></p>
+<p>启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# /usr/local/nginx/sbin/nginx</span><br></pre></td></tr></table></figure>
+<p>停止/重启</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# /usr/local/nginx/sbin/nginx -s stop(quit、reload)</span><br></pre></td></tr></table></figure>
+<p>命令帮助</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# /usr/local/nginx/sbin/nginx -h</span><br></pre></td></tr></table></figure>
+<p>验证配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# /usr/local/nginx/sbin/nginx -t</span><br></pre></td></tr></table></figure>
+<p>配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# vim /usr/local/nginx/conf/nginx.conf</span><br></pre></td></tr></table></figure>
+<h3 id="4、简单配置Nginx"><a href="#4、简单配置Nginx" class="headerlink" title="4、简单配置Nginx"></a>4、简单配置Nginx</h3><p>打开nginx配置文件位于nginx目录下的conf文件夹下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost nginx]# vim conf/nginx.conf</span><br></pre></td></tr></table></figure>
+<p>简单介绍一下vim的语法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">默认vim打开后是不能录入的，需要按键才能操作，具体如下：</span><br><span class="line">开启编辑：按“i”或者“Insert”键</span><br><span class="line">退出编辑：“Esc”键</span><br><span class="line">退出vim：“:q”</span><br><span class="line">保存vim：“:w”</span><br><span class="line">保存退出vim：“:wq”</span><br><span class="line">不保存退出vim：“:q!”</span><br></pre></td></tr></table></figure>
+<p>“#”代表注释，最重要的是server{}块这部分就代表每一个web站点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">upstream testserver&#123;</span><br><span class="line">    server localhost:81;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">    listen       80;</span><br><span class="line">    server_name  www.domain.com;</span><br><span class="line"></span><br><span class="line">    location / &#123;</span><br><span class="line">         proxy_pass http://testserver;</span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>添加如上代码，监听80端口，将域名访问<code>www.domain.com</code>的访问指到<code>localhost:81</code>，保存退出并且重启nginx</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost nginx]# ./sbin/nginx -s reload</span><br></pre></td></tr></table></figure>
+<h3 id="5-配置本地域名多服务"><a href="#5-配置本地域名多服务" class="headerlink" title="5.配置本地域名多服务"></a>5.配置本地域名多服务</h3><p>扩展upstream{}、server{}即可实现二级域名访问同一服务器的多服务项目。</p>
+<h3 id="6-开启HTTPS、Nginx-证书部署"><a href="#6-开启HTTPS、Nginx-证书部署" class="headerlink" title="6.开启HTTPS、Nginx 证书部署"></a>6.开启HTTPS、Nginx 证书部署</h3><h4 id="获取证书略"><a href="#获取证书略" class="headerlink" title="获取证书略"></a>获取证书略</h4><h4 id="证书安装"><a href="#证书安装" class="headerlink" title="证书安装"></a>证书安装</h4><p>将域名 <a href="http://www.domain.com" target="_blank" rel="noopener">www.domain.com</a> 的证书文件 <code>1_www.domain.com_bundle.crt</code> 、私钥文件 <code>2_www.domain.com.key</code> 保存到同一个目录，例如 <code>/usr/local/nginx/conf</code> 目录下。<br>修改 Nginx 根目录下 <code>conf/nginx.conf</code> 文件，内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 443;</span><br><span class="line">    server_name www.domain.com; #填写绑定证书的域名</span><br><span class="line">    ssl on;</span><br><span class="line">    ssl_certificate 1_www.domain.com_bundle.crt;</span><br><span class="line">    ssl_certificate_key 2_www.domain.com.key;</span><br><span class="line">    ssl_session_timeout 5m;</span><br><span class="line">    ssl_protocols TLSv1 TLSv1.1 TLSv1.2; #按照这个协议配置</span><br><span class="line">    ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5:!RC4:!DHE;#按照这个套件配置</span><br><span class="line">    ssl_prefer_server_ciphers on;</span><br><span class="line">    location / &#123;</span><br><span class="line">        proxy_pass http://testserver;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>配置完成后，请先执行命令 <code>sbin/nginx –t</code> 测试 Nginx 配置是否有误。若无报错，重启 Nginx 之后，即可使用 <code>https://www.domain.com</code> 来访问。</p>
+<p>相关参数说明如下：</p>
+<table>
+<thead>
+<tr>
+<th>配置文件参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>listen 443</td>
+<td>SSL 访问端口号为 443</td>
+</tr>
+<tr>
+<td>ssl on</td>
+<td>启用 SSL 功能</td>
+</tr>
+<tr>
+<td>ssl_certificate</td>
+<td>证书文件</td>
+</tr>
+<tr>
+<td>ssl_certificate_key</td>
+<td>私钥文件</td>
+</tr>
+<tr>
+<td>ssl_protocols</td>
+<td>使用的协议</td>
+</tr>
+<tr>
+<td>ssl_ciphers</td>
+<td>配置加密套件，写法遵循 openssl 标准</td>
+</tr>
+</tbody>
+</table>
+<p>如果配置完成后出现如下错误：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nginx:[emerg]unknown directive &quot;ssl&quot;</span><br></pre></td></tr></table></figure>
+<p>因为我们配置这个SSL证书需要引用到nginx的中SSL这模块，然而我们一开始编译的Nginx的时候并没有把SSL模块一起编译进去，所以导致这个错误的出现。</p>
+<h4 id="错误解决步骤"><a href="#错误解决步骤" class="headerlink" title="错误解决步骤"></a>错误解决步骤</h4><p>既然在安装的时候没有编译ssl，难道把nginx卸载重新安装一次？不不不，我们只需要在原有的基础上添加ssl模块就行了。</p>
+<p>我们先来到当初下载nginx的包压缩的解压目录，解压目录应该在<code>/usr/loacl/src/</code>，绝大多数应该都是在这个目录下的，已经是一种规范了。</p>
+<p>来到解压目录下后，按顺序执行一下命令：</p>
+<p>命令1<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost nginx]# ./configure --with-http_ssl_module  //重新添加这个ssl模块</span><br></pre></td></tr></table></figure></p>
+<p>注意如果没有出现错误，则直接看命令2即可 </p>
+<p>执行以上一条命令出现这个错误<code>./configure：错误：SSL模块需要OpenSSL库。</code>，原因是因为缺少了OpenSSL，那我们再来安装一个即可执行：<code>yum -y install openssl openssl-devel</code></p>
+<p>等待OpenSSL的安装完成后，再执行<code>./configure</code> ，最后在执行<code>命令1</code> 即可。</p>
+<p>命令2<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost nginx]# make</span><br></pre></td></tr></table></figure></p>
+<p>不要执行make install，因为make是用来编译的，而make install是安装，不然你整个nginx会重新覆盖的。</p>
+<p>命令3</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost nginx]# cp /usr/local/nginx/sbin/nginx /usr/local/nginx/sbin/nginx.bak // 先将原来的nginx备份想删除也可以</span><br><span class="line"></span><br><span class="line">[root@localhost nginx]# cp objs/nginx /usr/local/nginx/sbin/nginx // objs 目录中是编译后产生的文件</span><br></pre></td></tr></table></figure>
+<p>再次<code>sbin/nginx –t</code>即可看见成功。</p>
+<h4 id="使用全站加密，HTTP-自动跳转-HTTPS（可选）"><a href="#使用全站加密，HTTP-自动跳转-HTTPS（可选）" class="headerlink" title="使用全站加密，HTTP 自动跳转 HTTPS（可选）"></a>使用全站加密，HTTP 自动跳转 HTTPS（可选）</h4><p>对于用户不知道网站可以进行 HTTPS 访问的情况下，让服务器自动把 HTTP 的请求重定向到 HTTPS。</p>
+<p>在服务器这边的话配置的话，可以在页面里加 js 脚本，也可以在后端程序里写重定向，当然也可以在 web 服务器来实现跳转。Nginx 是支持 rewrite 的（只要在编译的时候没有去掉 pcre）</p>
+<p>在 HTTP 的 server 里增加 <code>rewrite ^(.*) https://$host$1 permanent;</code><br>这样就可以实现 80 进来的请求，重定向为 HTTPS 了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen       80;</span><br><span class="line">    server_name  www.duia.online;</span><br><span class="line"></span><br><span class="line">    location / &#123;</span><br><span class="line">         proxy_pass http://haloserver;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    rewrite ^(.*) https://$host$1 permanent;</span><br><span class="line">   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/nginx/" rel="tag"># nginx</a>
+          
+            <a href="/tags/https/" rel="tag"># https</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/02/22/ueditor+公式插件/" rel="next" title="ueditor+公式插件">
+                <i class="fa fa-chevron-left"></i> ueditor+公式插件
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/05/16/Sentinel + Zookeeper动态数据源 + Springboot客户端 + 集群限流/" rel="prev" title="Sentinel + Zookeeper动态数据源 + Springboot客户端 + 集群限流">
+                Sentinel + Zookeeper动态数据源 + Springboot客户端 + 集群限流 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/pengcheng.jpg" alt="W鹏程">
+            
+              <p class="site-author-name" itemprop="name">W鹏程</p>
+              <p class="site-description motion-element" itemprop="description">宁在地狱为王，不愿天堂为仆</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/duia" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="duia.online@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、Nginx简介"><span class="nav-number">1.</span> <span class="nav-text">一、Nginx简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、Nginx安装"><span class="nav-number">2.</span> <span class="nav-text">二、Nginx安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1、下载Nginx及相关组件"><span class="nav-number">2.1.</span> <span class="nav-text">1、下载Nginx及相关组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2、安装Nginx及相关组件"><span class="nav-number">2.2.</span> <span class="nav-text">2、安装Nginx及相关组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3、启动Nginx"><span class="nav-number">2.3.</span> <span class="nav-text">3、启动Nginx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4、简单配置Nginx"><span class="nav-number">2.4.</span> <span class="nav-text">4、简单配置Nginx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-配置本地域名多服务"><span class="nav-number">2.5.</span> <span class="nav-text">5.配置本地域名多服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-开启HTTPS、Nginx-证书部署"><span class="nav-number">2.6.</span> <span class="nav-text">6.开启HTTPS、Nginx 证书部署</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#获取证书略"><span class="nav-number">2.6.1.</span> <span class="nav-text">获取证书略</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#证书安装"><span class="nav-number">2.6.2.</span> <span class="nav-text">证书安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#错误解决步骤"><span class="nav-number">2.6.3.</span> <span class="nav-text">错误解决步骤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用全站加密，HTTP-自动跳转-HTTPS（可选）"><span class="nav-number">2.6.4.</span> <span class="nav-text">使用全站加密，HTTP 自动跳转 HTTPS（可选）</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">W鹏程</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
